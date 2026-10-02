@@ -20,9 +20,10 @@
   if(!current)return;
   controller?.abort();controller=new AbortController();const signal=controller.signal;
   if(reset){page=0;seen=new Set();newsList.replaceChildren()}
+  byId('news-setup').hidden=true;
   more.hidden=true;more.disabled=true;status.textContent='Loading headlines for '+current.name+'…';
   try{
-   const data=await get('/api/news?stock='+encodeURIComponent(current.id)+'&page='+page,signal);
+   const data=await get('/api/news?stock='+encodeURIComponent(current.id)+'&page='+page+'&range='+byId('news-range').value,signal);
    if(signal.aborted)return;
    for(const article of data.items){
     if(seen.has(article.url))continue;
@@ -34,9 +35,11 @@
     item.append(text('div',(article.publisher||'Publisher')+' · '+time(article.date),'story-meta'),link);
     newsList.append(item);
    }
-   status.textContent=seen.size?seen.size+' headlines · retrieved '+new Date(data.asOf).toLocaleString('en-GB')+' · FMP':'No provider headlines found for this stock in the last 30 days. Coverage varies, especially for UK listings.';
+   status.textContent=seen.size?seen.size+' headlines · retrieved '+new Date(data.asOf).toLocaleString('en-GB')+' · FMP':'No headlines returned for this stock and period. Try Available history or the Google News link. Provider coverage varies.';
    more.hidden=!data.hasMore;more.disabled=false;
-  }catch(error){if(signal.aborted)return;report(error,status);if(page>0){more.hidden=false;more.disabled=false;page--}}
+   if(data.limitReached)status.textContent+=' · 1,000-result limit reached. Narrow the date range or search broader coverage.';
+   else if(!data.hasMore&&seen.size)status.textContent+=' · End of provider results for this period.';
+  }catch(error){if(signal.aborted)return;report(error,status);byId('news-setup').hidden=false;if(page>0){more.hidden=false;more.disabled=false;page--}}
  }
  function context(stock){
   const sectors={
@@ -79,7 +82,8 @@
  }
  function select(stock){
   controller?.abort();current=stock;more.hidden=true;
-  if(!stock){newsList.replaceChildren();status.textContent='Choose a stock to load its news.';return}
+  if(!stock){newsList.replaceChildren();chooser.value='';byId('news-context').textContent='';byId('broader-news').hidden=true;status.textContent='Choose a stock to load its news.';return}
+  byId('broader-news').hidden=false;byId('broader-news').href='https://news.google.com/search?q='+encodeURIComponent(stock.name+' '+stock.ticker+' stock');
   chooser.value=stock.id;byId('news-context').textContent=context(stock);loadNews(true);
  }
  chooser.addEventListener('change',()=>{
@@ -92,6 +96,7 @@
  window.addEventListener('stock-selected',e=>{if(e.detail?.id!==current?.id)select(e.detail)});
  byId('news-refresh').addEventListener('click',()=>{loadNews(true);loadMacro()});
  more.addEventListener('click',()=>{page++;loadNews()});
+ byId('news-range').addEventListener('change',()=>loadNews(true));
  byId('macro-filter').addEventListener('change',renderMacro);
  select(stocks.find(s=>s.id===selectedId));loadMacro();
 })();
