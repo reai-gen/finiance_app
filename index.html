@@ -15,6 +15,9 @@ main{max-width:1400px;margin:auto;padding:36px 4%}.intro{display:flex;justify-co
 @media(max-width:740px){main{padding:25px 5%}.intro{display:block}.demo{max-width:none;margin-bottom:20px}.market-cards{gap:8px}.market-card{padding:13px}.market-card strong{font-size:17px}.market-card .symbol{display:none}.market-card small{font-size:10px}.workspace{grid-template-columns:1fr}.detail{position:static;scroll-margin-top:15px}.controls{grid-template-columns:1fr 130px}.table-scroll{max-height:450px}.nav-pill{font-size:10px;padding:7px 10px}.brand{font-size:19px}.bottom{display:block}.detail h2{font-size:20px}.panel-head{padding:18px}.sort-row,.controls{padding-left:18px;padding-right:18px}td,th{padding:12px 9px}.market-cell{display:table-cell}}
 @media(max-width:390px){.market-cell{display:none}.controls{grid-template-columns:1fr}.name small{max-width:125px}.brand{font-size:17px}.nav-pill{font-size:9px}.market-card{padding:10px}.sort-row{align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}.market-card:hover{transform:none}}
+
+.news-section{margin-top:30px;padding:25px}.news-heading{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:18px}.news-heading h2{font-size:26px}.news-heading p,.news-help{font-size:12px;color:var(--muted)}.news-tools{display:flex;gap:9px;max-width:430px}.news-tools select{min-width:190px}.news-action{border:1px solid var(--line);background:#f0e5f3;color:var(--ink);border-radius:9px;padding:10px 15px;white-space:nowrap;font-size:12px}.news-action:disabled{opacity:.5;cursor:wait}.news-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}.news-grid h3{font-size:17px;margin:16px 0 8px}.news-status{font-size:11px;color:var(--muted);min-height:32px}.headline{padding:17px 0;border-bottom:1px solid var(--line)}.headline a{font-size:14px;font-weight:bold;text-decoration:none;line-height:1.6}.headline a:hover{text-decoration:underline}.story-meta{font-size:10px;color:var(--muted);margin-bottom:7px}.macro-event{background:#f8f1f7;border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}.macro-event h4{font-size:14px;margin:0}.event-phase{font-size:10px;color:var(--muted)}.event-values{display:flex;gap:8px;flex-wrap:wrap;font-size:11px}.event-values span{background:white;padding:5px 7px;border-radius:5px}.event-context{font-size:12px;color:var(--muted);margin-bottom:0}.news-context{padding:15px;background:#fff0e6;border-radius:12px;font-size:12px;color:#714b49}.macro-toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between}.macro-toolbar select{width:145px;font-size:11px;padding:7px}.feed-list{max-height:690px;overflow:auto}.sources{font-size:10px;color:var(--muted);line-height:1.8}.sources a{margin-right:10px}
+@media(max-width:740px){.news-section{padding:18px}.news-heading{display:block}.news-tools{max-width:none}.news-tools select{min-width:0}.news-grid{grid-template-columns:1fr;gap:18px}}
 </style>
 </head>
 <body>
@@ -33,6 +36,17 @@ main{max-width:1400px;margin:auto;padding:36px 4%}.intro{display:flex;justify-co
 <div class="table-scroll"><table><caption class="sr-only">Sample UK and US stocks with fictional prices and daily percentage changes</caption><thead><tr><th scope="col">Company / ticker</th><th scope="col" class="market-cell">Market</th><th scope="col">Demo price</th><th scope="col">Demo day %</th></tr></thead><tbody id="stock-rows"></tbody></table><div id="empty" class="empty" hidden>No stocks match your filters. Try another name, market or sector.</div></div><div class="table-note">UK prices use GBX (pence): 100 GBX = £1. US prices use US dollars.</div></section>
 <aside class="panel detail" id="stock-detail" aria-labelledby="detail-name" tabindex="-1"></aside>
 </div>
+
+<section class="panel news-section" aria-labelledby="news-heading">
+<div class="news-heading"><div><div class="eyebrow">The story behind the stock</div><h2 id="news-heading">News &amp; the bigger picture</h2><p>Company headlines alongside the economic releases worth watching.</p></div><div class="news-tools"><label><span class="sr-only">Choose a stock for news</span><select id="news-stock"></select></label><button id="news-refresh" class="news-action">Refresh feeds</button></div></div>
+<p id="news-context" class="news-context"></p>
+<div class="news-grid">
+<div><h3>Company news</h3><p class="news-help">Last 30 days from the provider. Load more for older results in this window. Coverage is not exhaustive.</p><p id="news-status" class="news-status" role="status"></p><div id="news-list" class="feed-list"></div><button id="news-more" class="news-action" hidden>Load more headlines</button></div>
+<div><div class="macro-toolbar"><h3>Macro watch · UK + US</h3><label><span class="sr-only">Economic event type</span><select id="macro-filter"><option value="all">All key events</option><option>Jobs / NFP</option><option>Interest rates</option><option>Inflation</option><option>Jobs</option><option>Growth</option></select></label></div>
+<p class="news-help">Past 7 days + next 14 days. NFP, rates, inflation, employment and GDP. Dates are as supplied by the provider; release times are omitted where the timezone is unverified.</p>
+<p id="macro-status" class="news-status" role="status"></p><div id="macro-list" class="feed-list"></div></div>
+</div><p class="sources">Research context is general, not a measured impact or buy/sell signal. Provider data can be delayed, incomplete or revised. Feeds are cached for up to 5 minutes. Quote cards above remain fictional demo data.<br>Primary sources: <a href="https://www.bls.gov/schedule/news_release/empsit.htm" target="_blank" rel="noopener noreferrer">US jobs releases</a><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener noreferrer">Federal Reserve</a><a href="https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes" target="_blank" rel="noopener noreferrer">Bank of England</a></p>
+</section>
 <footer class="bottom"><span>finance world · A space for your financial curiosity.</span><span>Interactive demo · No trading or investment recommendations.</span></footer>
 <noscript><p>Please enable JavaScript to browse and select stocks.</p></noscript>
 </main>
@@ -84,6 +98,7 @@ function renderRows(){
  document.getElementById('count').textContent=list.length+' of '+stocks.length+' samples';
  document.getElementById('empty').hidden=list.length!==0;
  renderDetail();
+ window.dispatchEvent(new CustomEvent('stock-selected',{detail:stocks.find(s=>s.id===selectedId)||null}));
 }
 function chartValues(stock,windowName){
  // Deterministic synthetic series: never represents historical prices.
@@ -111,5 +126,6 @@ document.querySelectorAll('[data-market]').forEach(button=>button.addEventListen
 search.addEventListener('input',renderRows);sector.addEventListener('change',renderRows);sort.addEventListener('change',renderRows);
 renderRows();
 </script>
+<script src="news.js"></script>
 </body>
 </html>
