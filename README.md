@@ -24,7 +24,10 @@ Opening index.html directly or using static-only hosting cannot serve the news A
 
 ## What the news section does
 - Choose a stock in either the table or the news selector; both remain in sync.
-- Company headlines: last 30 days, 20 provider results per page, up to 50 pages.
+- Company headlines: available provider history by default, with optional 7/30/90-day filters.
+  20 provider results per page, up to 50 pages (1,000 raw results). The UI identifies the cap.
+  The stock detail card links directly to the news section. A Google News search link
+  provides a separate route to broader coverage, even before connecting the provider.
   Deduplicates article URLs and links to the publisher. This is not all news on the internet.
 - Macro watch: seven days back and fourteen days ahead; US and UK payrolls/NFP,
   policy rates, CPI/PCE/inflation, jobs and GDP events.
