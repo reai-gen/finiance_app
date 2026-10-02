@@ -51,9 +51,15 @@ export function createServer({apiKey=process.env.FMP_API_KEY,fetchImpl=fetch}={}
     const symbol=symbols.get(url.searchParams.get('stock'));
     const page=Number(url.searchParams.get('page')||0);
     if(!symbol||!Number.isInteger(page)||page<0||page>49)return send(400,{error:'Invalid stock or page.'});
-    const now=new Date(),from=new Date(now);from.setUTCDate(from.getUTCDate()-30);
-    const result=await provider('news/stock',{symbols:symbol,from:from.toISOString().slice(0,10),to:now.toISOString().slice(0,10),limit:20,page});
-    return send(200,{items:cleanNews(result.data),hasMore:result.data.length===20&&page<49,page,asOf:new Date(result.at).toISOString(),provider:'Financial Modeling Prep',symbol});
+    const range=url.searchParams.get('range')||'all';
+    if(!['all','7','30','90'].includes(range))return send(400,{error:'Invalid news range.'});
+    const params={symbols:symbol,limit:20,page};
+    if(range!=='all'){
+     const now=new Date(),from=new Date(now);from.setUTCDate(from.getUTCDate()-Number(range));
+     params.from=from.toISOString().slice(0,10);params.to=now.toISOString().slice(0,10);
+    }
+    const result=await provider('news/stock',params);
+    return send(200,{items:cleanNews(result.data),hasMore:result.data.length===20&&page<49,range,limitReached:result.data.length===20&&page===49,page,asOf:new Date(result.at).toISOString(),provider:'Financial Modeling Prep',symbol});
    }
    if(url.pathname==='/api/macro'){
     const now=new Date(),from=new Date(now),to=new Date(now);
