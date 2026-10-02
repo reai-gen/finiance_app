@@ -62,3 +62,16 @@ test('serves app assets but never environment or server source',async()=>{
   for(const path of ['/.env','/server.mjs','/README.md'])assert.equal((await fetch(base+path)).status,404);
  });
 });
+
+test('default range removes the 30-day restriction, date filters and pagination reach the provider',async()=>{
+ let urls=[];
+ await useServer({apiKey:'x',fetchImpl:async url=>{urls.push(new URL(url));return {ok:true,status:200,json:async()=>Array.from({length:20},(_,i)=>({title:'Headline '+i,url:'https://example.com/'+i}))}}},async(base,fetch)=>{
+  let data=await(await fetch(base+'/api/news?stock=US:AAPL')).json();
+  assert.equal(urls[0].searchParams.has('from'),false);assert.equal(urls[0].searchParams.has('to'),false);assert.equal(data.hasMore,true);
+  await fetch(base+'/api/news?stock=US:AAPL&range=90&page=1');
+  assert(urls[1].searchParams.has('from'));assert.equal(urls[1].searchParams.get('page'),'1');
+  data=await(await fetch(base+'/api/news?stock=US:AAPL&page=49')).json();
+  assert.equal(data.hasMore,false);assert.equal(data.limitReached,true);
+  assert.equal((await fetch(base+'/api/news?stock=US:AAPL&range=bad')).status,400);
+ });
+});
