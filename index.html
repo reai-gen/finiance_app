@@ -23,6 +23,33 @@ main{max-width:1400px;margin:auto;padding:36px 4%}.intro{display:flex;justify-co
 .quote-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0 0 18px}.quote-toolbar p,.quote-time{font-size:11px;color:var(--muted)}.quote-time{overflow-wrap:anywhere;line-height:1.7}.chart-placeholder{min-height:210px;display:grid;align-items:center;color:var(--muted);font-size:12px}.chart-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:8px}
 
 .money-flow{padding:24px;margin-bottom:28px}.flow-heading{display:flex;justify-content:space-between;gap:12px;align-items:start;margin-bottom:18px}.flow-heading h2{font-size:clamp(22px,2.8vw,34px);margin:5px 0}.flow-heading p{margin:0;color:var(--muted)}.flow-disclaimer{font-size:11px;white-space:nowrap;background:#f7edf6;border:1px solid var(--line);padding:7px 10px;border-radius:100px}.flow-layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr);gap:20px}.flow-stage{background:#fff9f7;border:1px solid var(--line);border-radius:16px;padding:12px}.flow-svg{width:100%;height:auto;display:block}.flow-label{font-size:17px;font-weight:bold;fill:#40223d}.flow-symbol{font-size:23px;font-weight:bold;fill:#743e70}.flow-wallet{font-size:17px;font-weight:bold;fill:#16684e}.flow-hint{font-size:12px;fill:#776674}.flow-key{font-size:11px;color:var(--muted);margin:4px 10px 2px}.flow-insight{background:#fff;border:1px solid var(--line);padding:18px;border-radius:16px}.flow-insight label{font-size:11px;color:var(--muted)}.flow-insight select{margin:7px 0 12px}.flow-insight h3{font-size:19px;margin:6px 0 10px}.flow-insight p,.flow-insight li{font-size:12px;color:var(--muted)}.flow-insight ol{padding-left:21px}.flow-insight li{margin-bottom:6px}.flow-insight .flow-evidence{border-top:1px solid var(--line);padding-top:10px}.flow-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px}.flow-bottom span{font-size:11px;color:var(--muted)}@media(max-width:900px){.flow-layout{grid-template-columns:1fr}.flow-heading{display:block}.flow-disclaimer{display:inline-block;margin-top:10px}}@media(prefers-reduced-motion:reduce){.flow-svg animateMotion{display:none}}
+
+/* Immersive editorial hero: CSS-only 3D-inspired motion, no remote assets. */
+.money-flow{position:relative;isolation:isolate;background:radial-gradient(ellipse at 71% 22%,#542b78 0,transparent 38%),radial-gradient(ellipse at 13% 90%,#32224d 0,transparent 45%),#120e24;border:1px solid #44325c;color:#f8f4ff;box-shadow:0 18px 50px #2b17382c;overflow:hidden}
+.money-flow::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.28;background-image:radial-gradient(#d9beed 1px,transparent 1px);background-size:27px 27px;mask-image:linear-gradient(to right,transparent,#000)}
+.money-flow .flow-heading h2,.money-flow .flow-insight h3{color:#fff}
+.money-flow .flow-heading .eyebrow{color:#ecadf1}.money-flow .flow-heading p{color:#d2bfdf}
+.money-flow .flow-disclaimer{background:#ffffff12;border-color:#ffffff36;color:#f4ddef}
+.money-flow .flow-stage{background:linear-gradient(145deg,#130b26d9,#28154796);border:1px solid #8b68a650;position:relative;overflow:hidden}
+.flow-3d{height:300px;position:relative;display:grid;place-items:center;perspective:850px;touch-action:pan-y}
+.flow-orb{width:210px;height:210px;position:relative;transform-style:preserve-3d;transform:rotateX(var(--flow-tilt-x,-17deg)) rotateY(var(--flow-tilt-y,17deg));transition:transform .5s ease}
+.orb-core{position:absolute;inset:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;gap:8px;font-size:39px;font-weight:800;letter-spacing:-3px;color:#f9e8ff;text-shadow:0 0 22px #e9b2ff;background:radial-gradient(circle at 30% 24%,#d6a9fa,#7c42be 43%,#39155b 72%,#190f33);box-shadow:inset -16px -15px 27px #100c30,0 0 45px #ad54ed7a,0 15px 65px #0b0318}
+.orb-core span{font-size:24px;color:#f9b6bc}
+.orb-ring{position:absolute;inset:7px;border-radius:50%;border:20px solid transparent;border-top-color:#d79af7;border-bottom-color:#7845c5;box-shadow:0 0 18px #cf6dff80,inset 0 0 10px #c36bfb80;transform-style:preserve-3d;animation:orb-spin 12s linear infinite}
+.ring-a{transform:rotateX(65deg);animation-name:ring-a-spin}
+.ring-b{transform:rotateY(68deg) rotateZ(35deg);animation-name:ring-b-spin;animation-duration:16s}
+.ring-c{inset:24px;border-width:8px;border-top-color:#e9a5cc;border-bottom-color:#a95bcf;animation-duration:21s;animation-name:ring-c-spin}
+.flow-3d-caption{position:absolute;bottom:4px;letter-spacing:2px;font-size:10px;color:#e8c7fa;font-weight:700;text-align:center}
+@keyframes ring-a-spin{to{transform:rotateX(65deg) rotateZ(360deg)}}
+@keyframes ring-b-spin{to{transform:rotateY(68deg) rotateZ(395deg)}}
+@keyframes ring-c-spin{to{transform:rotateX(60deg) rotateY(360deg)}}
+.money-flow .flow-svg{border-top:1px solid #ffffff24;margin-top:12px;padding-top:8px;max-height:225px}
+.money-flow .flow-key{color:#dac7e5}.money-flow .flow-key strong{color:#fff}
+.money-flow .flow-insight{background:#1f1633;border-color:#634979;color:#eee3f5;box-shadow:0 12px 35px #0d07122b}
+.money-flow .flow-insight label,.money-flow .flow-insight p,.money-flow .flow-insight li,.money-flow .flow-bottom span{color:#cdbdd9}
+.money-flow .flow-insight select{background:#302046;color:#fff;border-color:#684d82}
+.money-flow .flow-insight .flow-evidence{border-color:#ffffff31}
+@media(prefers-reduced-motion:reduce){.orb-ring{animation:none!important}.flow-orb{transition:none}.money-flow .flow-svg animateMotion{display:none}}
 </style>
 </head>
 <body>
@@ -30,7 +57,7 @@ main{max-width:1400px;margin:auto;padding:36px 4%}.intro{display:flex;justify-co
 <main>
 <section class="panel money-flow" id="money-flow" aria-labelledby="money-flow-heading" data-topic="rates">
  <div class="flow-heading"><div><div class="eyebrow">From the world economy to your wallet</div><h2 id="money-flow-heading">How money moves — and what reaches our pocket</h2><p>Explore how decisions and data can ripple across the UK, the US and household budgets.</p></div><span class="flow-disclaimer">Illustration, not measured money flows</span></div>
- <div class="flow-layout"><div class="flow-stage">
+ <div class="flow-layout"><div class="flow-stage"><div class="flow-3d" id="flow-3d" aria-hidden="true"><div class="flow-orb"><div class="orb-ring ring-a"></div><div class="orb-ring ring-b"></div><div class="orb-ring ring-c"></div><div class="orb-core">£ <span>↔</span> $</div></div><div class="flow-3d-caption">GLOBAL FORCES · LOCAL CONSEQUENCES</div></div>
  <svg class="flow-svg" viewBox="0 0 800 300" role="img" aria-label="Illustrative animated two-way paths between United Kingdom and United States, leading to household spending. Not actual capital-flow data.">
   <defs><linearGradient id="flow-gradient"><stop stop-color="#92538c"/><stop offset="1" stop-color="#ee9982"/></linearGradient></defs>
   <rect x="22" y="75" width="188" height="115" rx="20" fill="#f7edf6" stroke="#d8bfd3"/>

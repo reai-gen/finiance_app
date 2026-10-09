@@ -1,6 +1,19 @@
 (() => {
  const root=document.getElementById('money-flow');if(!root)return;
  const status=document.getElementById('flow-status'),selector=document.getElementById('flow-topic'),details=document.getElementById('flow-details'),heading=document.getElementById('flow-result'),refresh=document.getElementById('flow-refresh');
+ const stage=document.getElementById('flow-3d'),orb=stage?.querySelector('.flow-orb');
+ if(stage&&orb&&matchMedia('(prefers-reduced-motion: reduce)').matches===false){
+  stage.addEventListener('pointermove',event=>{
+   const rect=stage.getBoundingClientRect();
+   const x=(event.clientX-rect.left)/rect.width-.5,y=(event.clientY-rect.top)/rect.height-.5;
+   orb.style.setProperty('--flow-tilt-y',(x*38).toFixed(1)+'deg');
+   orb.style.setProperty('--flow-tilt-x',(-17-y*24).toFixed(1)+'deg');
+  });
+  stage.addEventListener('pointerleave',()=>{
+   orb.style.removeProperty('--flow-tilt-x');
+   orb.style.removeProperty('--flow-tilt-y');
+  });
+ }
  const routes={
   rates:{name:'Interest rates',headline:'Borrowing costs and savings can change',explanation:'When central banks change rates, mortgage and loan repayments may move, while savings interest can change too. Timing depends on contracts and banks.',paths:['International investors may shift capital in response to changing yields','Exchange rates and company funding costs may respond','Households can experience changes in repayments and savings returns']},
   inflation:{name:'Inflation',headline:'Everyday essentials can absorb more income',explanation:'Higher food, transport or energy costs can reduce what remains after bills if income does not keep pace.',paths:['Energy, imports and supply costs can affect prices','Companies may change prices or margins','Household purchasing power can rise or fall']},
