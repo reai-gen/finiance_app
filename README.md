@@ -60,3 +60,6 @@ hosting cannot call the API routes.
 - GET /api/chart?stock=UK:BP.&period=1M (1W, 1M, 1Y)
 
 The server requests Yahoo Finance chart data and caches snapshots for 60 seconds. Auto-refresh checks every minute while the page is visible; a refresh does **not** guarantee the exchange has published a new trade or quote. Yahoo Finance availability, usage terms and permission for redistribution should be assessed before production deployment. Missing or invalid quotes are displayed as unavailable, never replaced with demo figures.
+
+## Candlestick charts
+The stock detail panel offers `1m`, `5m`, `15m`, `1h`, `4h`, `1d`, `1W`, `1M` and `1Y`. The first six are candle resolutions / short history windows (1m = one-minute candles for one trading day, 5m/15m = recent five days, 1h/4h = recent month, 1d = five days). The last three display a week, month or year of daily candles. Each candle shows provider open/high/low/close (OHLC); 4h candles aggregate four hourly candles within a single market-local date. Candles are historical provider data, **not a guaranteed live tick feed**. Intraday data retention, UK exchange coverage, holidays, trading sessions and exchange delays depend on the provider. Unsupported intervals display a clear no-data/error state rather than synthetic prices.
