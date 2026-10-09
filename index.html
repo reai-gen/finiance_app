@@ -21,11 +21,37 @@ main{max-width:1400px;margin:auto;padding:36px 4%}.intro{display:flex;justify-co
 .news-range{display:flex;align-items:center;gap:12px;font-size:12px;margin:14px 0}.news-range select{width:180px}.news-context pre{white-space:pre-wrap;overflow-wrap:anywhere}.stock-news-link{display:block;text-align:center;background:var(--ink);color:white;text-decoration:none;border-radius:10px;padding:12px;margin-top:16px}#stock-news{scroll-margin-top:20px}
 .brief-method{background:#eee3f4;padding:12px 16px;border-radius:12px;color:#683a65;font-size:12px}.brief-point{border-bottom:1px solid var(--line);padding:12px 0}.brief-point p{font-size:14px;line-height:1.7;margin:0 0 8px}.brief-point small{display:inline}.source-stories{margin-top:20px}.source-stories summary{cursor:pointer;font-weight:bold;font-size:12px}.macro-event .brief-point p{font-size:12px}.macro-event .brief-point{padding:10px 0}
 .quote-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0 0 18px}.quote-toolbar p,.quote-time{font-size:11px;color:var(--muted)}.quote-time{overflow-wrap:anywhere;line-height:1.7}.chart-placeholder{min-height:210px;display:grid;align-items:center;color:var(--muted);font-size:12px}.chart-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:8px}
+
+.money-flow{padding:24px;margin-bottom:28px}.flow-heading{display:flex;justify-content:space-between;gap:12px;align-items:start;margin-bottom:18px}.flow-heading h2{font-size:clamp(22px,2.8vw,34px);margin:5px 0}.flow-heading p{margin:0;color:var(--muted)}.flow-disclaimer{font-size:11px;white-space:nowrap;background:#f7edf6;border:1px solid var(--line);padding:7px 10px;border-radius:100px}.flow-layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr);gap:20px}.flow-stage{background:#fff9f7;border:1px solid var(--line);border-radius:16px;padding:12px}.flow-svg{width:100%;height:auto;display:block}.flow-label{font-size:17px;font-weight:bold;fill:#40223d}.flow-symbol{font-size:23px;font-weight:bold;fill:#743e70}.flow-wallet{font-size:17px;font-weight:bold;fill:#16684e}.flow-hint{font-size:12px;fill:#776674}.flow-key{font-size:11px;color:var(--muted);margin:4px 10px 2px}.flow-insight{background:#fff;border:1px solid var(--line);padding:18px;border-radius:16px}.flow-insight label{font-size:11px;color:var(--muted)}.flow-insight select{margin:7px 0 12px}.flow-insight h3{font-size:19px;margin:6px 0 10px}.flow-insight p,.flow-insight li{font-size:12px;color:var(--muted)}.flow-insight ol{padding-left:21px}.flow-insight li{margin-bottom:6px}.flow-insight .flow-evidence{border-top:1px solid var(--line);padding-top:10px}.flow-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px}.flow-bottom span{font-size:11px;color:var(--muted)}@media(max-width:900px){.flow-layout{grid-template-columns:1fr}.flow-heading{display:block}.flow-disclaimer{display:inline-block;margin-top:10px}}@media(prefers-reduced-motion:reduce){.flow-svg animateMotion{display:none}}
 </style>
 </head>
 <body>
 <header><nav><a href="#" class="brand"><span aria-hidden="true">↗</span>finance world</a><span class="nav-label">Discover. Understand. Choose your next move.</span><span class="nav-pill">The market, on your terms</span></nav></header>
 <main>
+<section class="panel money-flow" id="money-flow" aria-labelledby="money-flow-heading" data-topic="rates">
+ <div class="flow-heading"><div><div class="eyebrow">From the world economy to your wallet</div><h2 id="money-flow-heading">How money moves — and what reaches our pocket</h2><p>Explore how decisions and data can ripple across the UK, the US and household budgets.</p></div><span class="flow-disclaimer">Illustration, not measured money flows</span></div>
+ <div class="flow-layout"><div class="flow-stage">
+ <svg class="flow-svg" viewBox="0 0 800 300" role="img" aria-label="Illustrative animated two-way paths between United Kingdom and United States, leading to household spending. Not actual capital-flow data.">
+  <defs><linearGradient id="flow-gradient"><stop stop-color="#92538c"/><stop offset="1" stop-color="#ee9982"/></linearGradient></defs>
+  <rect x="22" y="75" width="188" height="115" rx="20" fill="#f7edf6" stroke="#d8bfd3"/>
+  <rect x="586" y="75" width="188" height="115" rx="20" fill="#fff1ea" stroke="#f2c2b3"/>
+  <text x="116" y="116" text-anchor="middle" class="flow-label">United Kingdom</text><text x="116" y="145" text-anchor="middle" class="flow-symbol">£ GBP</text>
+  <text x="680" y="116" text-anchor="middle" class="flow-label">United States</text><text x="680" y="145" text-anchor="middle" class="flow-symbol">$ USD</text>
+  <path id="flow-forward" d="M210 110 C310 30 490 30 586 110" fill="none" stroke="url(#flow-gradient)" stroke-width="5" stroke-linecap="round" stroke-dasharray="12 9"/>
+  <path id="flow-backward" d="M586 156 C480 236 315 236 210 156" fill="none" stroke="#bd94b9" stroke-width="5" stroke-linecap="round" stroke-dasharray="12 9"/>
+  <circle r="8" fill="#743e70"><animateMotion dur="6s" repeatCount="indefinite"><mpath href="#flow-forward"/></animateMotion></circle>
+  <circle r="7" fill="#f48f78"><animateMotion dur="7s" repeatCount="indefinite"><mpath href="#flow-backward"/></animateMotion></circle>
+  <path d="M400 214 V249" stroke="#99738f" stroke-width="3" stroke-dasharray="5 5"/>
+  <rect x="250" y="249" width="300" height="47" rx="17" fill="#e4f3ed" stroke="#a8cec1"/>
+  <text x="400" y="279" text-anchor="middle" class="flow-wallet">Your household budget</text>
+  <text x="398" y="21" text-anchor="middle" class="flow-hint">Trade · investment · currency expectations</text>
+ </svg>
+ <p class="flow-key">Animated routes show possible connections, <strong>not actual transfers or quantified effects</strong>. Politics and policy can change their direction or strength.</p>
+ </div>
+ <div class="flow-insight"><label for="flow-topic">Explore an economic driver</label><select id="flow-topic"><option value="rates">Interest rates</option><option value="inflation">Inflation and prices</option><option value="jobs">Jobs and wages</option><option value="trade">Politics and trade</option></select><h3 id="flow-result"></h3><div id="flow-details"></div><div class="flow-bottom"><span id="flow-status" role="status">Checking macro calendar…</span><button id="flow-refresh" class="news-action" type="button">Refresh</button></div></div>
+ </div>
+ </section>
+
 <section class="intro"><div><div class="eyebrow">A stock explorer for women</div><h1>A world of stocks.<br><em>Your own perspective.</em></h1><p>Explore UK and US companies. Find a name you know, discover a new sector, and select a stock to take a closer look.</p></div><div class="demo"><strong>LATEST AVAILABLE QUOTES</strong>24 UK/US companies. Prices refresh every minute. Check each quote’s timestamp; market data may be delayed.</div></section>
 <div class="market-cards" role="group" aria-label="Filter by market">
 <button class="market-card" data-market="all" aria-pressed="true"><span class="symbol" aria-hidden="true">◎</span><small>EXPLORE TOGETHER</small><strong>UK + US</strong><small>24 companies</small></button>
@@ -134,6 +160,7 @@ renderRows();
 </script>
 <script src="quotes.js"></script>
 <script src="news.js"></script>
+<script src="money-flow.js"></script>
 </body>
 </html>
 
