@@ -1,5 +1,6 @@
 import { createMarketData } from './market-data.mjs';
 import { createBriefing } from './briefing.mjs';
+import { createLiveStream } from './live-stream.mjs';
 import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -32,6 +33,7 @@ export function createServer({apiKey=process.env.FMP_API_KEY,fetchImpl=fetch}={}
  const cache=new Map();
  const briefing=createBriefing({fetchImpl});
  const marketData=createMarketData({fetchImpl});
+ const liveStream=createLiveStream();
  async function provider(path,params) {
   if(!apiKey)throw {status:503,message:'News connection not configured. Add FMP_API_KEY to the server environment.'};
   const key=path+'?'+new URLSearchParams(params);
@@ -51,6 +53,7 @@ export function createServer({apiKey=process.env.FMP_API_KEY,fetchImpl=fetch}={}
   try{
    const url=new URL(req.url,'http://localhost');
    if(req.method!=='GET')return send(405,{error:'Only GET is supported.'});
+   if(url.pathname==='/api/live')return liveStream.subscribe(req,res);
    if(url.pathname==='/api/quote')return send(200,await marketData.quote(url.searchParams.get('stock')));
    if(url.pathname==='/api/chart')return send(200,await marketData.history(url.searchParams.get('stock'),url.searchParams.get('period')||'1M'));
    if(url.pathname==='/api/briefing')return send(200,await briefing(url.searchParams.get('stock')));

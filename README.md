@@ -1,7 +1,7 @@
 # Finance World
 
 ## Start the app
-Requires Node.js 20 or newer. No API key or npm installation is needed for prices
+Requires Node.js 22 or newer (native server-side WebSocket). No API key or npm installation is needed for prices
 and public-feed briefings.
 ```bash
 git pull
@@ -60,3 +60,11 @@ hosting cannot call the API routes.
 - GET /api/chart?stock=UK:BP.&period=1M (1W, 1M, 1Y)
 
 The server requests Yahoo Finance chart data and caches snapshots for 60 seconds. Auto-refresh checks every minute while the page is visible; a refresh does **not** guarantee the exchange has published a new trade or quote. Yahoo Finance availability, usage terms and permission for redistribution should be assessed before production deployment. Missing or invalid quotes are displayed as unavailable, never replaced with demo figures.
+
+## Optional live streaming trades
+
+Set `FINNHUB_API_KEY` in your **server-only** `.env`, then restart `node --env-file=.env server.mjs`. The server makes a single upstream WebSocket connection to Finnhub and distributes validated last-trade events through same-origin `GET /api/live` using Server-Sent Events. The browser never receives the Finnhub token. The existing Yahoo Finance quote snapshots (once per minute) remain available when streaming is offline, unconfigured or not entitled. The previous close remains from the Yahoo snapshot when computing live daily percentage change; if it is absent, change remains blank.
+
+**Important:** A connected WebSocket does *not* guarantee live prices for every ticker. Finnhub's US coverage can reflect particular venues, and LSE access, symbol mapping, UK quote units, exchange redistribution permissions and subscriptions must be verified for the account. UK streaming prices are only accepted when consistent with the existing quote currency and within a sanity range of the snapshot. Unsupported symbols simply keep their latest available snapshot. No artificial ticks or invented price movements are generated. Market closures may produce no new trades. The client rejects stale or out-of-order trades, and the server drops trades older than five minutes. Do not expose the app publicly without authentication, usage controls and licence review.
+
+Get Finnhub WebSocket details at https://finnhub.io/docs/api/websocket-trades. One Finnhub API key can open only one upstream connection; running multiple copies of this server with the same token may cause disconnections.

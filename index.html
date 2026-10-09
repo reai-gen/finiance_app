@@ -68,7 +68,7 @@ const priceText=s=>{
 };
 const changeText=n=>typeof n==='number'&&Number.isFinite(n)?(n>=0?'+':'')+n.toFixed(2)+'%':'—';
 const quoteStatus=s=>s.quote?
- 'Quote: '+new Date(s.quote.quoteTime).toLocaleString('en-GB')+' · '+s.quote.session+' · Yahoo Finance':
+ 'Quote: '+new Date(s.quote.quoteTime).toLocaleString('en-GB')+' · '+s.quote.session+' · '+(s.quote.source||'Yahoo Finance'):
  s.quoteError||'Retrieving the latest available quote…';
 function filteredStocks(){
  const query=search.value.trim().toLowerCase();
