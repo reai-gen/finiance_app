@@ -74,3 +74,16 @@ The stock detail panel offers `1m`, `5m`, `15m`, `1h`, `4h`, `1d`, `1W`, `1M` an
 
 ## Animated money-flow explainer
 The top-of-page UK/US animation is an **illustration**, not measured capital flow. The selector explains potential household pathways through interest rates, inflation, wages and trade/political policy. Related FMP economic calendar items are shown when available without implying an observed causal or monetary impact. The explainer remains educational when FMP is unavailable. No user budget or financial account data is collected.
+
+## Deploy to Render and share the site
+
+The repository includes a Render Blueprint `render.yaml` with a free Node.js web service, a `/health` check, and Node 24. The server binds to `127.0.0.1` for local development and to `0.0.0.0` on Render via `HOST`.
+
+1. Sign into https://dashboard.render.com/ and connect GitHub.
+2. Select **New → Blueprint**, select `reai-gen/finiance_app` and its `main` branch. Review the service and choose **Apply**.
+3. Enter **newly rotated** `FINNHUB_API_KEY` and (if available) `FMP_API_KEY` in the secure environment-variable prompts. Do **not** put secrets in the repository. If a provider is not configured, that particular live/news feature may be unavailable.
+4. Wait for the web service status to be **Live**. Open the exact HTTPS `onrender.com` URL assigned by Render; verify the dashboard and `/health` response. Share this URL.
+
+Free web services can sleep when idle and may take a while to wake up; a continuously streaming app benefits from an always-on paid instance. Provider access, market-data redistribution terms and rate limits need review before inviting a large audience. The service is publicly reachable once deployed; avoid sharing it widely until you've checked provider rights and usage limits.
+
+Test locally before deployment: `node --test test-news.mjs test-market-data.mjs test-live-stream.mjs` then `node --env-file=.env server.mjs`.
