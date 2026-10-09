@@ -1,3 +1,5 @@
+import { createMarketData } from './market-data.mjs';
+import { createBriefing } from './briefing.mjs';
 import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -28,6 +30,8 @@ function cleanNews(rows) {
 }
 export function createServer({apiKey=process.env.FMP_API_KEY,fetchImpl=fetch}={}) {
  const cache=new Map();
+ const briefing=createBriefing({fetchImpl});
+ const marketData=createMarketData({fetchImpl});
  async function provider(path,params) {
   if(!apiKey)throw {status:503,message:'News connection not configured. Add FMP_API_KEY to the server environment.'};
   const key=path+'?'+new URLSearchParams(params);
@@ -47,6 +51,9 @@ export function createServer({apiKey=process.env.FMP_API_KEY,fetchImpl=fetch}={}
   try{
    const url=new URL(req.url,'http://localhost');
    if(req.method!=='GET')return send(405,{error:'Only GET is supported.'});
+   if(url.pathname==='/api/quote')return send(200,await marketData.quote(url.searchParams.get('stock')));
+   if(url.pathname==='/api/chart')return send(200,await marketData.history(url.searchParams.get('stock'),url.searchParams.get('period')||'1M'));
+   if(url.pathname==='/api/briefing')return send(200,await briefing(url.searchParams.get('stock')));
    if(url.pathname==='/api/news'){
     const symbol=symbols.get(url.searchParams.get('stock'));
     const page=Number(url.searchParams.get('page')||0);
@@ -72,7 +79,7 @@ export function createServer({apiKey=process.env.FMP_API_KEY,fetchImpl=fetch}={}
      .sort((a,b)=>a.date.localeCompare(b.date));
     return send(200,{items,from:start,to:end,asOf:new Date(result.at).toISOString(),provider:'Financial Modeling Prep'});
    }
-   const files={'/':['index.html','text/html; charset=utf-8'],'/index.html':['index.html','text/html; charset=utf-8'],'/news.js':['news.js','text/javascript; charset=utf-8']};
+   const files={'/':['index.html','text/html; charset=utf-8'],'/index.html':['index.html','text/html; charset=utf-8'],'/news.js':['news.js','text/javascript; charset=utf-8'],'/quotes.js':['quotes.js','text/javascript; charset=utf-8']};
    const file=files[url.pathname];if(!file)return send(404,{error:'Not found'});
    res.writeHead(200,{'Content-Type':file[1],'X-Content-Type-Options':'nosniff','Cache-Control':'no-cache'});res.end(await readFile(resolve(root,file[0])));
   }catch(e){send(e.status||500,{error:e.message&&e.status?e.message:'Unable to complete the request.'})}
@@ -82,3 +89,4 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const port=Number(process.env.PORT||3000);
  createServer().listen(port,'127.0.0.1',()=>console.log('Finance World: http://localhost:'+port));
 }
+
