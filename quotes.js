@@ -37,17 +37,33 @@
  function drawHistory(data,stock){
   const target=document.getElementById('price-chart');if(!target)return;
   target.replaceChildren();
-  if(data.points.length<2){target.textContent='Not enough historical prices returned for this period.';return}
-  const prices=data.points.map(p=>p.price),lo=Math.min(...prices),hi=Math.max(...prices);
-  const range=hi-lo||Math.max(1,hi*.01),times=data.points.map(p=>new Date(p.time).getTime()),start=times[0],end=times.at(-1);
-  const coords=data.points.map((p,i)=>((times[i]-start)/(end-start||1)*330+5).toFixed(1)+','+(160-(p.price-lo)/range*135).toFixed(1)).join(' ');
-  const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 340 190');svg.classList.add('chart');svg.setAttribute('role','img');
-  const title=document.createElementNS(ns,'title');title.textContent=stock.name+' historical closing prices; '+data.currency+'. Low '+lo.toFixed(2)+', high '+hi.toFixed(2)+'.';svg.append(title);
-  const line=document.createElementNS(ns,'polyline');line.setAttribute('points',coords);line.setAttribute('stroke','#92538c');line.setAttribute('stroke-width','2.8');line.setAttribute('fill','none');line.setAttribute('stroke-linejoin','round');svg.append(line);
-  const label=document.createElementNS(ns,'text');label.setAttribute('x','5');label.setAttribute('y','185');label.setAttribute('fill','#776674');label.setAttribute('font-size','10');label.textContent=lo.toFixed(2)+' – '+hi.toFixed(2)+' '+data.currency;svg.append(label);target.append(svg);
-  const dates=document.createElement('div');dates.className='chart-labels';
-  for(const date of [data.points[0].time,data.points.at(-1).time]){const span=document.createElement('span');span.textContent=new Date(date).toLocaleDateString('en-GB');dates.append(span)}
-  target.append(dates);
+  const items=data.points;
+  if(!items?.length){target.textContent='No OHLC candle data returned for this interval. The provider may not cover it.';return}
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 760 300');svg.setAttribute('class','chart candle-chart');svg.setAttribute('role','img');
+  const title=document.createElementNS(ns,'title');title.textContent=stock.name+' '+data.period+' candlestick history in '+data.currency;svg.append(title);
+  const low=Math.min(...items.map(x=>x.low)),high=Math.max(...items.map(x=>x.high)),pad=(high-low||high*.01)*.07;
+  const min=low-pad,max=high+pad;
+  const y=value=>270-(value-min)/(max-min)*245;
+  const left=45,width=696,step=width/items.length,bodyWidth=Math.max(1,Math.min(step*.7,14));
+  const add=(kind,attrs)=>{const el=document.createElementNS(ns,kind);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,String(v)));svg.append(el);return el};
+  for(let i=0;i<=4;i++){
+   const v=min+(max-min)*i;
+   add('line',{x1:left,y1:y(v),x2:755,y2:y(v),stroke:'#ece3eb','stroke-width':1});
+   const label=add('text',{x:2,y:y(v)+4,fill:'#776674','font-size':11});label.textContent=v.toFixed(2);
+  }
+  items.forEach((c,i)=>{
+   const x=left+(i+.5)*step,up=c.close>=c.open,color=up?'#15845f':'#bf4564';
+   const wick=add('line',{x1:x,y1:y(c.high),x2:x,y2:y(c.low),stroke:color,'stroke-width':Math.max(1,Math.min(2,step*.25))});
+   const top=Math.min(y(c.open),y(c.close)),height=Math.max(1,y(Math.min(c.open,c.close))-top);
+   const rect=add('rect',{x:x-bodyWidth/2,y:top,width:bodyWidth,height,fill:color});
+   const tip=document.createElementNS(ns,'title');tip.textContent=new Date(c.time).toLocaleString('en-GB')+' O '+c.open.toFixed(2)+' H '+c.high.toFixed(2)+' L '+c.low.toFixed(2)+' C '+c.close.toFixed(2)+' '+data.currency;rect.append(tip);
+  });
+  target.append(svg);
+  const labels=document.createElement('div');labels.className='chart-labels';
+  for(const item of [items[0],items.at(-1)]){const span=document.createElement('span');span.textContent=new Date(item.time).toLocaleString('en-GB');labels.append(span)}
+  target.append(labels);
+  const note=detail.querySelector('.chart-note');if(note)note.textContent='Candles: open, high, low, close · '+data.frequency+' · '+data.source+' · latest data may be delayed.';
  }
  async function loadChart(stock,requestedPeriod){
   chartController?.abort();chartController=new AbortController();const signal=chartController.signal;
