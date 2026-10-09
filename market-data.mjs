@@ -1,5 +1,8 @@
-// Yahoo Finance reference instruments: futures are USD per troy ounce; Nasdaq-100 is index points.
-const symbols=new Map([['MARKET:GOLD','GC=F'],['MARKET:SILVER','SI=F'],['MARKET:NASDAQ','^NDX']]);
+const symbols=new Map([
+ ...['AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','JPM','V','JNJ','XOM','WMT'].map(s=>['US:'+s,s]),
+ ...['AZN','SHEL','HSBA','ULVR','GSK','LLOY','BARC','TSCO','VOD','RIO'].map(s=>['UK:'+s,s+'.L']),
+ ['UK:BP.','BP.L'],['UK:NG.','NG.L']
+]);
 const periods={'1m':{range:'1d',interval:'1m'},'5m':{range:'5d',interval:'5m'},'15m':{range:'5d',interval:'15m'},'1h':{range:'1mo',interval:'60m'},'4h':{range:'1mo',interval:'60m'},'1d':{range:'5d',interval:'1d'},'1W':{range:'5d',interval:'1d'},'1M':{range:'1mo',interval:'1d'},'1Y':{range:'1y',interval:'1d'}};
 const currencyOf=value=>value==='GBp'||value==='GBX'?'GBX':value;
 export function aggregateFourHour(points,timezone='UTC'){
@@ -34,29 +37,22 @@ export function createMarketData({fetchImpl=fetch,now=Date.now}={}){
  const cache=new Map(),pending=new Map();
  async function chart(stock,config){
   const symbol=symbols.get(stock);
-  if(!symbol)throw {status:400,message:'Unknown instrument.'};
+  if(!symbol)throw {status:400,message:'Unknown stock.'};
   const key=stock+':'+config.range+':'+config.interval;
   const saved=cache.get(key);
   if(saved&&now()-saved.at<60000)return saved;
   if(pending.has(key))return pending.get(key);
   const task=(async()=>{
-   // Retry on Yahoo's alternate chart host if the first upstream host is unavailable.
-   // Neither host guarantees real-time quotes or public redistribution rights.
-   let result,lastStatus=502;
-   for(const host of ['query1.finance.yahoo.com','query2.finance.yahoo.com']){
-    const url=new URL('https://'+host+'/v8/finance/chart/'+encodeURIComponent(symbol));
-    url.searchParams.set('range',config.range);url.searchParams.set('interval',config.interval);url.searchParams.set('includePrePost','false');
-    try{
-     const response=await fetchImpl(url,{headers:{'User-Agent':'Mozilla/5.0 (compatible; NineToFiveWealth/1.0)','Accept':'application/json'},signal:AbortSignal.timeout(10000)});
-     lastStatus=response.status===429?429:502;
-     if(!response.ok)continue;
-     const data=await response.json();
-     const candidate=data?.chart?.result?.[0];
-     if(data?.chart?.error||!candidate)continue;
-     result=candidate;break;
-    }catch{continue}
-   }
-   if(!result)throw {status:lastStatus,message:lastStatus===429?'Market-data provider is rate-limiting this service. Try again later.':'No quote from the market-data provider. This market may be unavailable or blocked from this server.'};
+   const url=new URL('https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(symbol));
+   url.searchParams.set('range',config.range);url.searchParams.set('interval',config.interval);url.searchParams.set('includePrePost','false');
+   let response,data;
+   try{
+    response=await fetchImpl(url,{headers:{'User-Agent':'Mozilla/5.0 FinanceWorld','Accept':'application/json'},signal:AbortSignal.timeout(10000)});
+    data=await response.json();
+   }catch{throw {status:502,message:'Market data could not be reached. Please retry.'}}
+   if(!response.ok)throw {status:response.status===429?429:502,message:response.status===429?'The market-data provider is limiting requests. Please retry later.':'Market data is temporarily unavailable.'};
+   const result=data?.chart?.result?.[0];
+   if(data?.chart?.error||!result)throw {status:502,message:'No market data returned for this listing.'};
    const item={result,at:now()};
    // Validate quote data for snapshot requests before caching.
    if(config.range==='1d'&&config.interval==='5m')normaliseQuote(result,stock,item.at);
