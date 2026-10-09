@@ -58,7 +58,7 @@ test('provider errors remain errors and do not expose key',async()=>{
 });
 test('serves app assets but never environment or server source',async()=>{
  await useServer({apiKey:''},async (base,fetch)=>{
-  assert.equal((await fetch(base+'/')).status,200);assert.equal((await fetch(base+'/news.js')).status,200);
+  assert.equal((await fetch(base+'/')).status,200);assert.equal((await fetch(base+'/news.js')).status,200);assert.equal((await fetch(base+'/money-flow.js')).status,200);
   for(const path of ['/.env','/server.mjs','/README.md'])assert.equal((await fetch(base+path)).status,404);
  });
 });
