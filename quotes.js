@@ -1,7 +1,7 @@
 (() => {
  const feedStatus=document.getElementById('quote-feed-status'),refresh=document.getElementById('quote-refresh');
  let refreshing=false,chartController=null,lastChartKey=null;
- let streamLabel='Reference snapshots (not a live exchange feed)';
+ let streamLabel='Streaming not configured';
  const historyCache=new Map();
  async function api(path,signal){
   if(location.protocol==='file:')throw Error('Open localhost:3000 after starting the app with node server.mjs.');
@@ -24,7 +24,7 @@
      stock.quoteError=null}
     catch(error){stock.quote=null;stock.quoteError=error.message}
     paintQuote(stock);completed++;
-    feedStatus.textContent='Checked '+completed+' / '+stocks.length+' markets…';
+    feedStatus.textContent='Checked '+completed+' / '+stocks.length+' companies…';
    }
   }
   await Promise.all(Array.from({length:4},worker));
@@ -88,7 +88,26 @@
  refresh.addEventListener('click',()=>{refreshQuotes();loadChart(stocks.find(s=>s.id===selectedId),period)});
  document.addEventListener('visibilitychange',()=>{if(!document.hidden){refreshQuotes();loadChart(stocks.find(s=>s.id===selectedId),period)}});
  setInterval(()=>{if(!document.hidden){refreshQuotes();loadChart(stocks.find(s=>s.id===selectedId),period)}},60000);
- // Finnhub's original company-share stream does not cover these instruments.
- // Show Yahoo reference snapshots only; never label them as live trades.
+ const stream=new EventSource('/api/live');
+ stream.addEventListener('message',event=>{
+  let message;try{message=JSON.parse(event.data)}catch{return}
+  if(message.type==='status'){
+   streamLabel=message.mode==='streaming'?'Live stream connected (waiting for trades)':message.mode==='unconfigured'?'Streaming not configured':'Streaming offline';
+   return;
+  }
+  if(message.type!=='trade')return;
+  const stock=stocks.find(s=>s.id===message.stock);
+  if(!stock||!stock.quote||stock.quote.currency!==message.currency)return;
+  const timestamp=Date.parse(message.quoteTime);
+  if(!Number.isFinite(timestamp)||timestamp<=Date.parse(stock.quote.quoteTime)||!Number.isFinite(message.price)||message.price<=0)return;
+  // Prevent GBP/pence or mismatched listings silently corrupting displayed values.
+  if(message.price<stock.quote.price*.5||message.price>stock.quote.price*2)return;
+  const previousClose=stock.quote.previousClose;
+  stock.quote={...stock.quote,price:message.price,quoteTime:message.quoteTime,source:'Finnhub',session:'Live trade update (exchange entitlement permitting)',change:Number.isFinite(previousClose)&&previousClose>0?(message.price-previousClose)/previousClose*100:null};
+  streamLabel='Receiving live trade updates';
+  paintQuote(stock);
+  if(sort.value!=='name')renderRows();
+ });
+ stream.addEventListener('error',()=>{streamLabel='Streaming disconnected; using snapshot fallback'});
  refreshQuotes();loadChart(stocks.find(s=>s.id===selectedId),period);
 })();
