@@ -2,7 +2,7 @@
 <html lang="en-GB">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#40223d">
+<meta name="theme-color" content="#282037">
 <meta name="description" content="Explore UK and US stocks in a market explorer designed for women. Market quotes, price history and stock news briefings.">
 <title>Finance World · Stock Explorer</title>
 <style>
@@ -50,6 +50,56 @@ main{max-width:1400px;margin:auto;padding:36px 4%}.intro{display:flex;justify-co
 .money-flow .flow-insight select{background:#302046;color:#fff;border-color:#684d82}
 .money-flow .flow-insight .flow-evidence{border-color:#ffffff31}
 @media(prefers-reduced-motion:reduce){.orb-ring{animation:none!important}.flow-orb{transition:none}.money-flow .flow-svg animateMotion{display:none}}
+
+/* Finance World 2026 — quiet luxury editorial design system.
+   Restrained warm ivory, ink plum, muted brass; no external font or image requests. */
+:root{--ink:#282037;--muted:#685e70;--paper:#f7f4f0;--line:#e5dedc;--plum:#503356;--coral:#b97a70;--green:#176749;--red:#a63852;--gold:#a58151;--card:#fffdfa}
+html{scroll-behavior:smooth}body{font-family:Inter,"Avenir Next",Avenir,"Helvetica Neue",Arial,sans-serif;font-size:14px;line-height:1.58;background:radial-gradient(ellipse 1000px 430px at 50% -190px,#e7dfe8 0,transparent 82%),var(--paper);letter-spacing:.002em}
+h1,h2,h3,.brand,.market-card strong,.price,.flow-insight h3{font-family:"Iowan Old Style",Baskerville,"Palatino Linotype",Georgia,serif;letter-spacing:-.027em;font-weight:600}
+h1{font-size:clamp(38px,4.5vw,62px);line-height:1.08;letter-spacing:-.048em}
+h1 em{color:#866078;font-weight:400}h2{font-size:24px;letter-spacing:-.03em}
+header{background:#fcfaf8ed;border-bottom:1px solid #e6dedb}
+nav{padding-top:23px;padding-bottom:23px}.brand{font-size:27px;letter-spacing:-.035em}.brand span{background:linear-gradient(145deg,#6a476c,#33263c);border-radius:50%;color:#e9cda3;margin-right:11px}
+.nav-label{font-size:12px;letter-spacing:.03em}.nav-pill{background:#efe8e8;color:#503356;border:1px solid #e2d4d8;font-size:11px;letter-spacing:.055em}
+main{max-width:1470px;padding-top:40px}
+.panel{background:var(--card);border:1px solid #e9e2df;border-radius:22px;box-shadow:0 8px 35px rgba(60,39,52,.035)}
+.intro{padding:12px 0 8px}.intro p{font-size:15px;line-height:1.8;max-width:610px}
+.eyebrow{color:#8b6682;font-size:10px;letter-spacing:2.2px}
+.demo{background:#f1eae3;color:#62503b;border-color:#e6d9c9;padding:17px 20px;border-radius:14px;line-height:1.65}
+.demo strong{font-size:10px;letter-spacing:.13em;margin-bottom:4px}
+.market-cards{gap:18px;margin:12px 0 32px}.market-card{border:1px solid #e7dedc;background:#fffdfa;border-radius:18px;padding:22px 24px;box-shadow:0 8px 28px #50335608;transition:transform .2s,box-shadow .2s,border-color .2s}
+.market-card:hover{transform:translateY(-2px);border-color:#bda7b5;box-shadow:0 12px 27px #50335618}
+.market-card[aria-pressed=true]{background:linear-gradient(125deg,#f0e7ec,#faf6f3);border-color:#a991a5;box-shadow:inset 0 0 0 1px #d9c7d3}
+.market-card strong{font-size:27px;margin:9px 0 5px}.market-card small{font-size:10px;letter-spacing:.05em}.market-card .symbol{color:#927b61;background:#f4eee7}
+.workspace{gap:24px}.panel-head{padding:25px 26px 20px}.panel-head h2{font-size:27px}.controls{padding-left:26px;padding-right:26px}
+input,select{background:#fffdfb;color:var(--ink);border-color:#ded4d6;border-radius:11px;padding:12px 13px}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid #966e8c;outline-offset:3px}
+.sort-row{padding-left:26px;padding-right:26px;font-size:12px}
+thead{background:#f2edec}th{letter-spacing:.11em;text-transform:uppercase;font-size:10px;color:#726471;padding-top:16px;padding-bottom:16px}
+td{padding-top:17px;padding-bottom:17px;border-top-color:#eee7e4}tr[data-selected=true]{background:#f0e8ed}tbody tr:hover{background:#f8f2f4}
+.logo{background:#eee6ef;color:#644c68;border-radius:12px}.name strong{font-size:13px;font-weight:700}.name small{font-size:11px;margin-top:3px}
+.market-tag{border-radius:7px;background:#f9f5f3;padding:4px 8px}
+.table-note{background:#fcfaf8;border-top-color:#ebe3e0;font-size:11px;line-height:1.7}
+.detail{padding:29px}.detail h2{font-size:28px}.detail .demo-tag{background:#eee7de;color:#6a533e;padding:7px 11px;letter-spacing:.04em}
+.price{font-size:clamp(38px,3.4vw,52px);line-height:1.1;margin:25px 0 5px;color:#302238;font-family:"Iowan Old Style",Baskerville,Georgia,serif;font-weight:600}
+.price-caption{font-size:12px}.periods{gap:5px;padding:6px;background:#f5eff2;border-radius:12px}
+.periods button{font-size:11px;border-radius:8px;padding:8px 10px;transition:background .2s}.periods button[aria-pressed=true]{background:#fffdfa;box-shadow:0 1px 5px #3a294021;color:#4b2e52}
+.candle-chart{height:280px}.chart-note{line-height:1.6}.stats{gap:20px}.stats dt{font-size:11px}.stats dd{font-size:14px}
+.detail-title{font-size:13px}.stock-news-link{background:#4b304d;border-radius:11px;padding:15px;font-weight:600;letter-spacing:.02em;transition:background .2s}.stock-news-link:hover{background:#63436a}
+.news-section{padding:30px}.news-heading h2{font-size:35px}.news-heading p{font-size:13px;line-height:1.7}
+.news-action{background:#f2e9ee;border-color:#d9c8d4;color:#49334e;border-radius:11px;padding:11px 16px;font-weight:600}.news-action:hover{background:#e8dbe4}
+.brief-method{background:#f2eced;color:#655165;line-height:1.7;border:1px solid #e7dde2}
+.news-grid h3{font-family:"Iowan Old Style",Baskerville,Georgia,serif;font-size:23px}.macro-event{background:#f8f4f3;border-color:#e7dfdf;border-radius:15px}
+.news-context{background:#f6eee7;color:#694d45}.brief-point p{line-height:1.8}.headline{border-bottom-color:#e7dddf}
+.quote-toolbar{padding:0 2px}.quote-toolbar p{font-size:12px}
+.bottom{border-top:1px solid #e5dcd9;padding-top:22px;margin-top:40px;font-size:12px}
+.money-flow{border-radius:24px;box-shadow:0 24px 60px #21122522;border-color:#55415f;background:radial-gradient(ellipse at 73% 10%,#4a315b 0,transparent 46%),radial-gradient(ellipse at 10% 95%,#30283e 0,transparent 52%),#181323}
+.money-flow .flow-heading h2{font-size:clamp(29px,3.4vw,45px);line-height:1.12;max-width:680px}
+.money-flow .flow-insight h3{font-size:26px;line-height:1.2}.money-flow .flow-disclaimer{white-space:normal;max-width:205px;text-align:center}
+.money-flow .flow-stage{border-radius:18px}.money-flow .flow-insight{border-radius:18px}
+.money-flow .flow-heading p{font-size:14px;line-height:1.8}.flow-3d-caption{letter-spacing:2.5px}
+@media(max-width:740px){main{padding-top:24px}.market-cards{gap:9px}.market-card{padding:14px}.market-card strong{font-size:20px}.panel-head{padding:19px}.detail{padding:20px}.news-section{padding:20px}.news-heading h2{font-size:29px}.brand{font-size:23px}.money-flow{padding:18px}.money-flow .flow-heading h2{font-size:30px}.money-flow .flow-disclaimer{max-width:none}.price{font-size:39px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.market-card,.stock-news-link{transition:none}}
 </style>
 </head>
 <body>
@@ -79,7 +129,7 @@ main{max-width:1400px;margin:auto;padding:36px 4%}.intro{display:flex;justify-co
  </div>
  </section>
 
-<section class="intro"><div><div class="eyebrow">A stock explorer for women</div><h1>A world of stocks.<br><em>Your own perspective.</em></h1><p>Explore UK and US companies. Find a name you know, discover a new sector, and select a stock to take a closer look.</p></div><div class="demo"><strong>LATEST AVAILABLE QUOTES</strong>24 UK/US companies. Prices refresh every minute. Check each quote’s timestamp; market data may be delayed.</div></section>
+<section class="intro"><div><div class="eyebrow">Investing, with clarity and confidence</div><h1>Build wealth.<br><em>On your own terms.</em></h1><p>Explore UK and US companies, understand the forces shaping markets, and make space for confident, informed financial decisions.</p></div><div class="demo"><strong>LATEST AVAILABLE QUOTES</strong>24 UK/US companies. Prices refresh every minute. Check each quote’s timestamp; market data may be delayed.</div></section>
 <div class="market-cards" role="group" aria-label="Filter by market">
 <button class="market-card" data-market="all" aria-pressed="true"><span class="symbol" aria-hidden="true">◎</span><small>EXPLORE TOGETHER</small><strong>UK + US</strong><small>24 companies</small></button>
 <button class="market-card" data-market="UK" aria-pressed="false"><span class="symbol" aria-hidden="true">£</span><small>UNITED KINGDOM</small><strong>UK stocks</strong><small>12 companies · UK listings</small></button>
@@ -104,7 +154,7 @@ main{max-width:1400px;margin:auto;padding:36px 4%}.intro{display:flex;justify-co
 <p id="news-context" class="news-context"></p>
 <p class="sources">Summaries preserve source wording and may omit context. Read the linked articles before drawing conclusions. News may be delayed or revised; feeds are cached for up to 5 minutes. Market quotes and news may arrive at different times; check their timestamps.</p>
 </section>
-<footer class="bottom"><span>finance world · A space for your financial curiosity.</span><span>Latest available quotes · No trading or investment recommendations.</span></footer>
+<footer class="bottom"><span>finance world · Investing knowledge, on your terms.</span><span>Latest available quotes · No trading or investment recommendations.</span></footer>
 <noscript><p>Please enable JavaScript to browse and select stocks.</p></noscript>
 </main>
 <script>
