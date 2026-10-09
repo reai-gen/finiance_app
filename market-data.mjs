@@ -1,8 +1,5 @@
-const symbols=new Map([
- ...['AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','JPM','V','JNJ','XOM','WMT'].map(s=>['US:'+s,s]),
- ...['AZN','SHEL','HSBA','ULVR','GSK','LLOY','BARC','TSCO','VOD','RIO'].map(s=>['UK:'+s,s+'.L']),
- ['UK:BP.','BP.L'],['UK:NG.','NG.L']
-]);
+// Yahoo Finance reference instruments: futures are USD per troy ounce; Nasdaq-100 is index points.
+const symbols=new Map([['MARKET:GOLD','GC=F'],['MARKET:SILVER','SI=F'],['MARKET:NASDAQ','^NDX']]);
 const periods={'1m':{range:'1d',interval:'1m'},'5m':{range:'5d',interval:'5m'},'15m':{range:'5d',interval:'15m'},'1h':{range:'1mo',interval:'60m'},'4h':{range:'1mo',interval:'60m'},'1d':{range:'5d',interval:'1d'},'1W':{range:'5d',interval:'1d'},'1M':{range:'1mo',interval:'1d'},'1Y':{range:'1y',interval:'1d'}};
 const currencyOf=value=>value==='GBp'||value==='GBX'?'GBX':value;
 export function aggregateFourHour(points,timezone='UTC'){
@@ -37,7 +34,7 @@ export function createMarketData({fetchImpl=fetch,now=Date.now}={}){
  const cache=new Map(),pending=new Map();
  async function chart(stock,config){
   const symbol=symbols.get(stock);
-  if(!symbol)throw {status:400,message:'Unknown stock.'};
+  if(!symbol)throw {status:400,message:'Unknown instrument.'};
   const key=stock+':'+config.range+':'+config.interval;
   const saved=cache.get(key);
   if(saved&&now()-saved.at<60000)return saved;
