@@ -1,102 +1,78 @@
 (() => {
- const byId=id=>document.getElementById(id);
- const chooser=byId('news-stock'), newsList=byId('news-list'), macroList=byId('macro-list');
- const status=byId('news-status'), macroStatus=byId('macro-status'), more=byId('news-more');
- let current=null,page=0,controller=null,macroController=null,seen=new Set(),macroItems=[];
+ const get=id=>document.getElementById(id),chooser=get('news-stock'),status=get('news-status');
+ let selected=null,controller;
+ const node=(tag,value,className)=>{const el=document.createElement(tag);el.textContent=value;if(className)el.className=className;return el};
+ const source=(item)=>{
+  const link=node('a',item.publisher+' · '+new Date(item.date).toLocaleDateString('en-GB')+' ↗');
+  let url;try{url=new URL(item.url)}catch{return node('span','Source unavailable')}
+  if(!['http:','https:'].includes(url.protocol))return node('span','Source unavailable');
+  link.href=url.href;link.target='_blank';link.rel='noopener noreferrer';link.className='story-meta';return link;
+ };
  stocks.slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(stock=>{
-  const option=document.createElement('option');option.value=stock.id;option.textContent=stock.name+' · '+stock.ticker+' ('+stock.market+')';chooser.append(option);
+  const option=node('option',stock.name+' · '+stock.ticker+' ('+stock.market+')');option.value=stock.id;chooser.append(option);
  });
- const text=(tag,value,className)=>{const el=document.createElement(tag);el.textContent=value;if(className)el.className=className;return el};
- const time=value=>value?String(value).replace('T',' ').replace('Z',' UTC'):'Time not supplied';
- async function get(path,signal){
-  if(location.protocol==='file:')throw new Error('Open the app through its local server to connect to news. See README for setup.');
-  const res=await fetch(path,{signal});
-  let data;try{data=await res.json()}catch{throw new Error('The news server is not running. Start the app using node server.mjs.')}
-  if(!res.ok)throw new Error(data.error||'News request failed.');
-  return data;
- }
- function report(error,target){if(error.name!=='AbortError')target.textContent=error.message}
- async function loadNews(reset=false){
-  if(!current)return;
-  controller?.abort();controller=new AbortController();const signal=controller.signal;
-  if(reset){page=0;seen=new Set();newsList.replaceChildren()}
-  byId('news-setup').hidden=true;
-  more.hidden=true;more.disabled=true;status.textContent='Loading headlines for '+current.name+'…';
-  try{
-   const data=await get('/api/news?stock='+encodeURIComponent(current.id)+'&page='+page+'&range='+byId('news-range').value,signal);
-   if(signal.aborted)return;
-   for(const article of data.items){
-    if(seen.has(article.url))continue;
-    let url;try{url=new URL(article.url)}catch{continue}
-    if(!['https:','http:'].includes(url.protocol))continue;
-    seen.add(article.url);
-    const item=text('article','', 'headline'),link=text('a',article.title);
-    link.href=url.href;link.target='_blank';link.rel='noopener noreferrer';
-    item.append(text('div',(article.publisher||'Publisher')+' · '+time(article.date),'story-meta'),link);
-    newsList.append(item);
-   }
-   status.textContent=seen.size?seen.size+' headlines · retrieved '+new Date(data.asOf).toLocaleString('en-GB')+' · FMP':'No headlines returned for this stock and period. Try Available history or the Google News link. Provider coverage varies.';
-   more.hidden=!data.hasMore;more.disabled=false;
-   if(data.limitReached)status.textContent+=' · 1,000-result limit reached. Narrow the date range or search broader coverage.';
-   else if(!data.hasMore&&seen.size)status.textContent+=' · End of provider results for this period.';
-  }catch(error){if(signal.aborted)return;report(error,status);byId('news-setup').hidden=false;if(page>0){more.hidden=false;more.disabled=false;page--}}
+ function renderPoints(target,points){
+  points.forEach(point=>{
+   const card=node('article','','brief-point');
+   card.append(node('p',point.summary),node('small',point.basis+' · ','story-meta'),source(point));target.append(card);
+  });
  }
  function context(stock){
-  const sectors={
-   Technology:'For technology companies, rate expectations are one lens for considering valuations and financing costs.',
-   Financials:'For financial companies, consider lending margins, funding costs and credit demand when reviewing rate news.',
-   Consumer:'For consumer companies, jobs and inflation releases offer context on household spending and costs.',
-   Energy:'For energy companies, economic growth can be relevant to demand; commodity-specific news also matters.',
-   Materials:'For materials companies, consider industrial demand and economic growth alongside commodity prices.',
-   Utilities:'For utilities, consider financing costs and how regulation may affect the response to rates.',
-   Healthcare:'For healthcare companies, macro conditions are one input alongside company results and regulatory developments.',
-   Communication:'For communication companies, consider advertising demand, household spending and financing costs.'
+  const prompts={
+   Technology:'For technology stocks, watch financing costs and valuation assumptions.',
+   Financials:'For financial stocks, watch funding costs, lending margins and credit demand.',
+   Consumer:'For consumer stocks, watch jobs, household spending and inflation.',
+   Energy:'For energy stocks, watch demand, commodity prices and growth expectations.',
+   Materials:'For materials stocks, watch industrial demand and commodity prices.',
+   Utilities:'For utilities, watch borrowing costs and regulatory decisions.',
+   Healthcare:'For healthcare stocks, company results and regulatory news may matter alongside macro news.',
+   Communication:'For communication stocks, watch advertising demand and financing costs.'
   };
-  return (sectors[stock.sector]||'Consider financing costs and demand alongside company-specific news.')+' These are general research prompts, not a prediction of this stock’s price.';
+  return (prompts[stock.sector]||'Review company news alongside the wider economy.')+' These are general research considerations, not a prediction of this stock’s response.';
  }
- function renderMacro(){
-  macroList.replaceChildren();
-  const filter=byId('macro-filter').value,today=new Date().toISOString().slice(0,10);
-  const items=macroItems.filter(e=>filter==='all'||e.category===filter);
-  for(const event of items){
-   const card=text('article','','macro-event');
-   card.append(text('div',event.country+' · '+event.category+' · '+event.date.slice(0,10),'story-meta'),text('h4',event.name));
-   const phase=event.actual!==null?'Actual reported':event.date.slice(0,10)<today?'Past date · result unavailable':'Scheduled · result pending';
-   card.append(text('p',phase+' · Provider impact: '+event.impact,'event-phase'));
-   const values=text('div','','event-values');
-   [['Actual',event.actual],['Forecast',event.estimate],['Previous',event.previous]].forEach(([label,value])=>values.append(text('span',label+': '+(value===null?'—':String(value)+(event.unit?' '+event.unit:'')))));
-   card.append(values);
-   const why=event.category==='Interest rates'?'Watch for changes to policy and guidance. Borrowing costs and valuation assumptions may change.':event.category.startsWith('Jobs')?'Compare jobs data with expectations and revisions. It may change the discussion around growth and interest rates.':event.category==='Inflation'?'Compare inflation with expectations. It may change the outlook for costs and monetary policy.':'Growth data offers context on demand; it does not determine an individual stock’s direction.';
-   card.append(text('p',why,'event-context'));macroList.append(card);
-  }
-  if(!items.length)macroList.append(text('p','No matching UK/US events returned in this window. This does not mean there is no macro risk.','news-help'));
- }
- async function loadMacro(){
-  macroController?.abort();macroController=new AbortController();const signal=macroController.signal;
-  macroItems=[];macroList.replaceChildren();macroStatus.textContent='Loading recent and upcoming economic releases…';
+ async function load(stock){
+  controller?.abort();controller=new AbortController();const signal=controller.signal;selected=stock;
+  get('company-brief').replaceChildren();get('macro-brief').replaceChildren();get('news-list').replaceChildren();get('news-setup').hidden=true;
+  if(!stock){chooser.value='';status.textContent='Choose a stock to see its briefing.';get('news-context').textContent='';get('broader-news').hidden=true;return}
+  chooser.value=stock.id;get('brief-title').textContent=stock.name+' · news in brief';
+  get('news-context').textContent=context(stock);
+  get('broader-news').hidden=false;get('broader-news').href='https://www.bing.com/news/search?q='+encodeURIComponent(stock.name+' stock');
+  status.textContent='Reading recent news feeds for '+stock.name+'…';
   try{
-   const data=await get('/api/macro',signal);if(signal.aborted)return;
-   macroItems=data.items;macroStatus.textContent=data.from+' to '+data.to+' · retrieved '+new Date(data.asOf).toLocaleString('en-GB')+' · FMP';
-   renderMacro();
-  }catch(error){if(!signal.aborted)report(error,macroStatus)}
- }
- function select(stock){
-  controller?.abort();current=stock;more.hidden=true;
-  if(!stock){newsList.replaceChildren();chooser.value='';byId('news-context').textContent='';byId('broader-news').hidden=true;status.textContent='Choose a stock to load its news.';return}
-  byId('broader-news').hidden=false;byId('broader-news').href='https://news.google.com/search?q='+encodeURIComponent(stock.name+' '+stock.ticker+' stock');
-  chooser.value=stock.id;byId('news-context').textContent=context(stock);loadNews(true);
+   if(location.protocol==='file:')throw Error('Start the local app server, then open localhost:3000. No API key is needed.');
+   const response=await fetch('/api/briefing?stock='+encodeURIComponent(stock.id),{signal});
+   let data;try{data=await response.json()}catch{throw Error('The news server is not running. Start it using node server.mjs.')}
+   if(!response.ok)throw Error(data.error||'Unable to load the briefing.');
+   if(signal.aborted)return;
+   if(data.company.error)get('company-brief').append(node('p',data.company.error,'news-help'));
+   else if(!data.company.points.length)get('company-brief').append(node('p','No company stories from the last 7 days were returned. Try the broader news search.','news-help'));
+   else renderPoints(get('company-brief'),data.company.points);
+   const available=data.macro.filter(group=>!group.error).length;
+   status.textContent='Briefing checked '+new Date(data.generatedAt).toLocaleString('en-GB')+' · '+(data.company.asOf?'Company feed retrieved '+new Date(data.company.asOf).toLocaleString('en-GB'):'Company feed unavailable')+' · '+available+'/3 macro feeds available.';
+   data.macro.forEach(group=>{
+    const section=node('section','','macro-event');section.append(node('h4',group.topic));
+    if(group.error)section.append(node('p',group.error,'news-help'));
+    else if(!group.points.length)section.append(node('p','No recent stories returned for this topic.','news-help'));
+    else renderPoints(section,group.points);
+    section.append(node('p','Possible relevance: '+group.why+' Direction and size of any effect are uncertain.','event-context'));
+    get('macro-brief').append(section);
+   });
+   data.company.articles.forEach(article=>{
+    const row=node('article','','headline');row.append(node('p',article.title),source(article));get('news-list').append(row);
+   });
+   get('sources-title').textContent='Browse source headlines ('+data.company.articles.length+')';
+  }catch(error){
+   if(signal.aborted)return;
+   status.textContent=error.message;get('news-setup').hidden=false;
+  }
  }
  chooser.addEventListener('change',()=>{
-  // Selecting here also updates the original explorer.
-  const stock=stocks.find(s=>s.id===chooser.value);
-  market='all';search.value='';sector.value='all';selectedId=stock.id;
+  market='all';search.value='';sector.value='all';selectedId=chooser.value;
   document.querySelectorAll('[data-market]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.market==='all')));
   renderRows();
  });
- window.addEventListener('stock-selected',e=>{if(e.detail?.id!==current?.id)select(e.detail)});
- byId('news-refresh').addEventListener('click',()=>{loadNews(true);loadMacro()});
- more.addEventListener('click',()=>{page++;loadNews()});
- byId('news-range').addEventListener('change',()=>loadNews(true));
- byId('macro-filter').addEventListener('change',renderMacro);
- select(stocks.find(s=>s.id===selectedId));loadMacro();
+ window.addEventListener('stock-selected',event=>{if(event.detail?.id!==selected?.id)load(event.detail)});
+ get('news-refresh').addEventListener('click',()=>load(selected));
+ load(stocks.find(stock=>stock.id===selectedId));
 })();
+
