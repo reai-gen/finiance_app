@@ -54,3 +54,19 @@ test('only gold, silver and Nasdaq-100 have supported Yahoo provider symbols',as
  assert(urls.some(path=>path.endsWith('/^NDX')));
  await assert.rejects(market.quote('US:AAPL'),e=>e.status===400);
 });
+
+test('retries query2 if query1 blocks the quote',async()=>{
+ const hosts=[];
+ const market=createMarketData({fetchImpl:async url=>{
+  hosts.push(url.hostname);
+  if(url.hostname==='query1.finance.yahoo.com')return {ok:false,status:429};
+  return {ok:true,status:200,json:async()=>sample};
+ }});
+ const quote=await market.quote('MARKET:GOLD');
+ assert.equal(quote.price,412.5);
+ assert.deepEqual(hosts,['query1.finance.yahoo.com','query2.finance.yahoo.com']);
+});
+test('reports unavailable quote if both Yahoo hosts reject it',async()=>{
+ const market=createMarketData({fetchImpl:async()=>({ok:false,status:503})});
+ await assert.rejects(market.quote('MARKET:SILVER'),e=>e.status===502&&/unavailable/.test(e.message));
+});
