@@ -55,7 +55,7 @@ export function createMarketData({fetchImpl=fetch,now=Date.now}={}){
    if(data?.chart?.error||!result)throw {status:502,message:'No market data returned for this listing.'};
    const item={result,at:now()};
    // Validate quote data for snapshot requests before caching.
-   if(config.range==='1d')normaliseQuote(result,stock,item.at);
+   if(config.range==='1d'&&config.interval==='5m')normaliseQuote(result,stock,item.at);
    cache.set(key,item);return item;
   })();
   pending.set(key,task);
