@@ -3,8 +3,19 @@ const symbols=new Map([
  ...['AZN','SHEL','HSBA','ULVR','GSK','LLOY','BARC','TSCO','VOD','RIO'].map(s=>['UK:'+s,s+'.L']),
  ['UK:BP.','BP.L'],['UK:NG.','NG.L']
 ]);
-const periods={'1W':{range:'5d',interval:'1d'},'1M':{range:'1mo',interval:'1d'},'1Y':{range:'1y',interval:'1d'}};
+const periods={'1m':{range:'1d',interval:'1m'},'5m':{range:'5d',interval:'5m'},'15m':{range:'5d',interval:'15m'},'1h':{range:'1mo',interval:'60m'},'4h':{range:'1mo',interval:'60m'},'1d':{range:'5d',interval:'1d'},'1W':{range:'5d',interval:'1d'},'1M':{range:'1mo',interval:'1d'},'1Y':{range:'1y',interval:'1d'}};
 const currencyOf=value=>value==='GBp'||value==='GBX'?'GBX':value;
+export function aggregateFourHour(points,timezone='UTC'){
+ const candles=[];let bucket=[],day=null;
+ const flush=()=>{if(!bucket.length)return;candles.push({time:bucket[0].time,open:bucket[0].open,high:Math.max(...bucket.map(x=>x.high)),low:Math.min(...bucket.map(x=>x.low)),close:bucket.at(-1).close});bucket=[]};
+ const formatter=new Intl.DateTimeFormat('en-CA',{timeZone:timezone,year:'numeric',month:'2-digit',day:'2-digit'});
+ for(const point of points){
+  const current=formatter.format(new Date(point.time));
+  if(current!==day||bucket.length===4){flush();day=current}
+  bucket.push(point);
+ }
+ flush();return candles;
+}
 export function normaliseQuote(result,stock,fetchedAt=Date.now()){
  const meta=result?.meta;
  const currency=currencyOf(meta?.currency);
@@ -44,7 +55,7 @@ export function createMarketData({fetchImpl=fetch,now=Date.now}={}){
    if(data?.chart?.error||!result)throw {status:502,message:'No market data returned for this listing.'};
    const item={result,at:now()};
    // Validate quote data for snapshot requests before caching.
-   if(config.range==='1d')normaliseQuote(result,stock,item.at);
+   if(config.range==='1d'&&config.interval==='5m')normaliseQuote(result,stock,item.at);
    cache.set(key,item);return item;
   })();
   pending.set(key,task);
@@ -60,13 +71,14 @@ export function createMarketData({fetchImpl=fetch,now=Date.now}={}){
    const data=await chart(stock,periods[period]);
    const currency=currencyOf(data.result.meta?.currency);
    if(!['USD','GBP','GBX'].includes(currency))throw {status:502,message:'Chart currency unavailable.'};
-   const values=data.result.indicators?.quote?.[0]?.close||[];
+   const values=data.result.indicators?.quote?.[0]||{};
    const points=(data.result.timestamp||[]).flatMap((time,i)=>{
-    const price=values[i];
-    return Number.isFinite(time)&&typeof price==='number'&&Number.isFinite(price)&&price>0?[{time:new Date(time*1000).toISOString(),price}]:[];
+    const open=values.open?.[i],high=values.high?.[i],low=values.low?.[i],close=values.close?.[i];
+    return Number.isFinite(time)&&[open,high,low,close].every(x=>Number.isFinite(x)&&x>0)&&high>=Math.max(open,close)&&low<=Math.min(open,close)?[{time:new Date(time*1000).toISOString(),open,high,low,close}]:[];
    });
    points.sort((a,b)=>a.time.localeCompare(b.time));
-   return {stock,period,currency,points,fetchedAt:new Date(data.at).toISOString(),source:'Yahoo Finance',frequency:'Daily closing prices'};
+   const candles=period==='4h'?aggregateFourHour(points,data.result.meta?.exchangeTimezoneName||'UTC'):points;
+   return {stock,period,currency,points:candles,fetchedAt:new Date(data.at).toISOString(),source:'Yahoo Finance',frequency:period==='4h'?'4h (aggregated from hourly)':'OHLC '+period};
   }
  };
 }
