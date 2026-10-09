@@ -3,7 +3,7 @@ const symbols=new Map([
  ...['AZN','SHEL','HSBA','ULVR','GSK','LLOY','BARC','TSCO','VOD','RIO'].map(s=>['UK:'+s,s+'.L']),
  ['UK:BP.','BP.L'],['UK:NG.','NG.L']
 ]);
-const periods={'1W':{range:'5d',interval:'1d'},'1M':{range:'1mo',interval:'1d'},'1Y':{range:'1y',interval:'1d'}};
+const periods={'1m':{range:'1d',interval:'1m'},'5m':{range:'5d',interval:'5m'},'15m':{range:'5d',interval:'15m'},'1h':{range:'1mo',interval:'60m'},'4h':{range:'1mo',interval:'60m'},'1d':{range:'5d',interval:'1d'},'1W':{range:'5d',interval:'1d'},'1M':{range:'1mo',interval:'1d'},'1Y':{range:'1y',interval:'1d'}};
 const currencyOf=value=>value==='GBp'||value==='GBX'?'GBX':value;
 export function normaliseQuote(result,stock,fetchedAt=Date.now()){
  const meta=result?.meta;
