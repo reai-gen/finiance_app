@@ -1,4 +1,4 @@
-# Finance World
+# 9–5 Wealth
 
 ## Start the app
 Requires Node.js 22 or newer (native server-side WebSocket). No API key or npm installation is needed for prices
