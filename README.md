@@ -54,3 +54,9 @@ Never commit credentials. Environment files are ignored by git.
 
 The server binds to localhost. Deployment requires a server runtime; static-only
 hosting cannot call the API routes.
+
+## Market data endpoints
+- GET /api/quote?stock=US:AAPL (also UK:BP. and the other curated watchlist IDs)
+- GET /api/chart?stock=UK:BP.&period=1M (1W, 1M, 1Y)
+
+The server requests Yahoo Finance chart data and caches snapshots for 60 seconds. Auto-refresh checks every minute while the page is visible; a refresh does **not** guarantee the exchange has published a new trade or quote. Yahoo Finance availability, usage terms and permission for redistribution should be assessed before production deployment. Missing or invalid quotes are displayed as unavailable, never replaced with demo figures.

@@ -3,7 +3,7 @@ const symbols=new Map([
  ...['AZN','SHEL','HSBA','ULVR','GSK','LLOY','BARC','TSCO','VOD','RIO'].map(s=>['UK:'+s,s+'.L']),
  ['UK:BP.','BP.L'],['UK:NG.','NG.L']
 ]);
-const periods={'1W':{range:'5d',interval:'30m'},'1M':{range:'1mo',interval:'1d'},'1Y':{range:'1y',interval:'1wk'}};
+const periods={'1W':{range:'5d',interval:'1d'},'1M':{range:'1mo',interval:'1d'},'1Y':{range:'1y',interval:'1d'}};
 const currencyOf=value=>value==='GBp'||value==='GBX'?'GBX':value;
 export function normaliseQuote(result,stock,fetchedAt=Date.now()){
  const meta=result?.meta;
@@ -65,7 +65,8 @@ export function createMarketData({fetchImpl=fetch,now=Date.now}={}){
     const price=values[i];
     return Number.isFinite(time)&&typeof price==='number'&&Number.isFinite(price)&&price>0?[{time:new Date(time*1000).toISOString(),price}]:[];
    });
-   return {stock,period,currency,points,fetchedAt:new Date(data.at).toISOString(),source:'Yahoo Finance'};
+   points.sort((a,b)=>a.time.localeCompare(b.time));
+   return {stock,period,currency,points,fetchedAt:new Date(data.at).toISOString(),source:'Yahoo Finance',frequency:'Daily closing prices'};
   }
  };
 }
