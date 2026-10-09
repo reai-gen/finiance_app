@@ -82,7 +82,7 @@ export function createServer({apiKey=process.env.FMP_API_KEY,fetchImpl=fetch}={}
      .sort((a,b)=>a.date.localeCompare(b.date));
     return send(200,{items,from:start,to:end,asOf:new Date(result.at).toISOString(),provider:'Financial Modeling Prep'});
    }
-   const files={'/':['index.html','text/html; charset=utf-8'],'/index.html':['index.html','text/html; charset=utf-8'],'/news.js':['news.js','text/javascript; charset=utf-8'],'/quotes.js':['quotes.js','text/javascript; charset=utf-8'],'/money-flow.js':['money-flow.js','text/javascript; charset=utf-8']};
+   const files={'/favicon.svg':['favicon.svg','image/svg+xml'],'/':['index.html','text/html; charset=utf-8'],'/index.html':['index.html','text/html; charset=utf-8'],'/news.js':['news.js','text/javascript; charset=utf-8'],'/quotes.js':['quotes.js','text/javascript; charset=utf-8'],'/money-flow.js':['money-flow.js','text/javascript; charset=utf-8']};
    const file=files[url.pathname];if(!file)return send(404,{error:'Not found'});
    res.writeHead(200,{'Content-Type':file[1],'X-Content-Type-Options':'nosniff','Cache-Control':'no-cache'});res.end(await readFile(resolve(root,file[0])));
   }catch(e){send(e.status||500,{error:e.message&&e.status?e.message:'Unable to complete the request.'})}
