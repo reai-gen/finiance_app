@@ -11,12 +11,25 @@ Open http://localhost:3000. If the server is already running, stop it with Ctrl+
 and restart it after pulling. Opening index.html directly cannot retrieve market data.
 
 ## Market prices
-The dashboard deliberately displays **only three reference markets**:
-- Gold futures (`GC=F`): latest available COMEX futures reference in **USD per troy ounce**.
-- Silver futures (`SI=F`): latest available COMEX futures reference in **USD per troy ounce**.
-- Nasdaq-100 Index (`^NDX`): index level in **points**, not dollars or an investable share.
-
-Quotes and OHLC chart candles are requested through the existing server-side Yahoo Finance chart endpoint. They are **provider-delayed or last-available**, not guaranteed live exchange feeds. Gold and silver futures prices are not retail spot/bullion purchase prices. This focused dashboard intentionally hides the old individual-stock news panel. The macroeconomic explainer remains available, but calendar event coverage requires an FMP key. Finnhub equity streaming is not currently used for these three instruments. If an index or intraday candle is unavailable from Yahoo, the app shows an unavailable state rather than invented prices.
+- The catalogue contains 24 UK and US listings. It is not the full market.
+- Prices and history are fetched server-side from Yahoo Finance chart data.
+- The price is the latest available regular-session quote, with its provider quote
+  timestamp. Pre/post-market prices are not substituted.
+- Day % is calculated against the previous regular-session close supplied for a
+  one-day query. Missing prior closes produce no percentage, rather than a guess.
+- Checks run every minute while the page is visible, with four concurrent requests.
+  There is also a Refresh prices button. Server data is cached for up to 60 seconds.
+- GBp/GBX remain British pence; GBP remains pounds. The app never silently
+  multiplies or divides a quote by 100.
+- Historical charts use actual dated closing-price points for 1 week, 1 month or
+  1 year. Missing points are excluded. No chart is simulated.
+- Failed quote refreshes clear the old price and display Unavailable.
+- Quote time and retrieval time are different: the quote timestamp can be from the
+  last trading session when the market is closed.
+- Yahoo/exchange data may be delayed. This is not a guaranteed real-time stream.
+  The public Yahoo endpoint is not a contracted market-data API and may be
+  restricted or change. An unavailable source produces an explicit error.
+- Reference: https://help.yahoo.com/kb/finance/article-exchanges-data-delays-sln2310.html
 
 ## Selected-stock briefings
 Selecting a stock updates its public-feed briefing. It extracts short summaries
