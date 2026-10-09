@@ -53,6 +53,7 @@ export function createServer({apiKey=process.env.FMP_API_KEY,fetchImpl=fetch}={}
   try{
    const url=new URL(req.url,'http://localhost');
    if(req.method!=='GET')return send(405,{error:'Only GET is supported.'});
+   if(url.pathname==='/health')return send(200,{ok:true,service:'9-5-wealth'});
    if(url.pathname==='/api/live')return liveStream.subscribe(req,res);
    if(url.pathname==='/api/quote')return send(200,await marketData.quote(url.searchParams.get('stock')));
    if(url.pathname==='/api/chart')return send(200,await marketData.history(url.searchParams.get('stock'),url.searchParams.get('period')||'1M'));
@@ -90,6 +91,7 @@ export function createServer({apiKey=process.env.FMP_API_KEY,fetchImpl=fetch}={}
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const port=Number(process.env.PORT||3000);
- createServer().listen(port,'127.0.0.1',()=>console.log('9–5 Wealth: http://localhost:'+port));
+ const host=process.env.HOST||'127.0.0.1';
+ createServer().listen(port,host,()=>console.log('9–5 Wealth listening on '+host+':'+port));
 }
 

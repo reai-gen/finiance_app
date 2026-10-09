@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: nine-to-five-wealth
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: node --version
+    startCommand: node server.mjs
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 24
+      - key: HOST
+        value: 0.0.0.0
+      - key: NODE_ENV
+        value: production
+      - key: FINNHUB_API_KEY
+        sync: false
+      - key: FMP_API_KEY
+        sync: false
