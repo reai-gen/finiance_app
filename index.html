@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#40223d">
-<meta name="description" content="Explore UK and US stocks in a market explorer designed for women. Interactive prototype with clearly labelled demo data.">
+<meta name="description" content="Explore UK and US stocks in a market explorer designed for women. Market quotes, price history and stock news briefings.">
 <title>Finance World · Stock Explorer</title>
 <style>
 :root{--ink:#40223d;--muted:#776674;--paper:#faf6f4;--line:#e8dfe5;--plum:#743e70;--coral:#f48f78;--green:#16684e;--red:#ac364c}
@@ -19,117 +19,121 @@ main{max-width:1400px;margin:auto;padding:36px 4%}.intro{display:flex;justify-co
 .news-section{margin-top:30px;padding:25px}.news-heading{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:18px}.news-heading h2{font-size:26px}.news-heading p,.news-help{font-size:12px;color:var(--muted)}.news-tools{display:flex;gap:9px;max-width:430px}.news-tools select{min-width:190px}.news-action{border:1px solid var(--line);background:#f0e5f3;color:var(--ink);border-radius:9px;padding:10px 15px;white-space:nowrap;font-size:12px}.news-action:disabled{opacity:.5;cursor:wait}.news-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}.news-grid h3{font-size:17px;margin:16px 0 8px}.news-status{font-size:11px;color:var(--muted);min-height:32px}.headline{padding:17px 0;border-bottom:1px solid var(--line)}.headline a{font-size:14px;font-weight:bold;text-decoration:none;line-height:1.6}.headline a:hover{text-decoration:underline}.story-meta{font-size:10px;color:var(--muted);margin-bottom:7px}.macro-event{background:#f8f1f7;border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}.macro-event h4{font-size:14px;margin:0}.event-phase{font-size:10px;color:var(--muted)}.event-values{display:flex;gap:8px;flex-wrap:wrap;font-size:11px}.event-values span{background:white;padding:5px 7px;border-radius:5px}.event-context{font-size:12px;color:var(--muted);margin-bottom:0}.news-context{padding:15px;background:#fff0e6;border-radius:12px;font-size:12px;color:#714b49}.macro-toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between}.macro-toolbar select{width:145px;font-size:11px;padding:7px}.feed-list{max-height:690px;overflow:auto}.sources{font-size:10px;color:var(--muted);line-height:1.8}.sources a{margin-right:10px}
 @media(max-width:740px){.news-section{padding:18px}.news-heading{display:block}.news-tools{max-width:none}.news-tools select{min-width:0}.news-grid{grid-template-columns:1fr;gap:18px}}
 .news-range{display:flex;align-items:center;gap:12px;font-size:12px;margin:14px 0}.news-range select{width:180px}.news-context pre{white-space:pre-wrap;overflow-wrap:anywhere}.stock-news-link{display:block;text-align:center;background:var(--ink);color:white;text-decoration:none;border-radius:10px;padding:12px;margin-top:16px}#stock-news{scroll-margin-top:20px}
+.brief-method{background:#eee3f4;padding:12px 16px;border-radius:12px;color:#683a65;font-size:12px}.brief-point{border-bottom:1px solid var(--line);padding:12px 0}.brief-point p{font-size:14px;line-height:1.7;margin:0 0 8px}.brief-point small{display:inline}.source-stories{margin-top:20px}.source-stories summary{cursor:pointer;font-weight:bold;font-size:12px}.macro-event .brief-point p{font-size:12px}.macro-event .brief-point{padding:10px 0}
+.quote-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0 0 18px}.quote-toolbar p,.quote-time{font-size:11px;color:var(--muted)}.quote-time{overflow-wrap:anywhere;line-height:1.7}.chart-placeholder{min-height:210px;display:grid;align-items:center;color:var(--muted);font-size:12px}.chart-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:8px}
 </style>
 </head>
 <body>
 <header><nav><a href="#" class="brand"><span aria-hidden="true">↗</span>finance world</a><span class="nav-label">Discover. Understand. Choose your next move.</span><span class="nav-pill">The market, on your terms</span></nav></header>
 <main>
-<section class="intro"><div><div class="eyebrow">A stock explorer for women</div><h1>A world of stocks.<br><em>Your own perspective.</em></h1><p>Explore UK and US companies. Find a name you know, discover a new sector, and select a stock to take a closer look.</p></div><div class="demo"><strong>DEMO DATA · NOT LIVE</strong>24 sample stocks. Prices, changes and charts are fictional illustrations, not market quotes or full-market coverage.</div></section>
+<section class="intro"><div><div class="eyebrow">A stock explorer for women</div><h1>A world of stocks.<br><em>Your own perspective.</em></h1><p>Explore UK and US companies. Find a name you know, discover a new sector, and select a stock to take a closer look.</p></div><div class="demo"><strong>LATEST AVAILABLE QUOTES</strong>24 UK/US companies. Prices refresh every minute. Check each quote’s timestamp; market data may be delayed.</div></section>
 <div class="market-cards" role="group" aria-label="Filter by market">
-<button class="market-card" data-market="all" aria-pressed="true"><span class="symbol" aria-hidden="true">◎</span><small>EXPLORE TOGETHER</small><strong>UK + US</strong><small>24 sample companies</small></button>
-<button class="market-card" data-market="UK" aria-pressed="false"><span class="symbol" aria-hidden="true">£</span><small>UNITED KINGDOM</small><strong>UK stocks</strong><small>12 examples · prices in GBX</small></button>
-<button class="market-card" data-market="US" aria-pressed="false"><span class="symbol" aria-hidden="true">$</span><small>UNITED STATES</small><strong>US stocks</strong><small>12 examples · prices in USD</small></button>
+<button class="market-card" data-market="all" aria-pressed="true"><span class="symbol" aria-hidden="true">◎</span><small>EXPLORE TOGETHER</small><strong>UK + US</strong><small>24 companies</small></button>
+<button class="market-card" data-market="UK" aria-pressed="false"><span class="symbol" aria-hidden="true">£</span><small>UNITED KINGDOM</small><strong>UK stocks</strong><small>12 companies · UK listings</small></button>
+<button class="market-card" data-market="US" aria-pressed="false"><span class="symbol" aria-hidden="true">$</span><small>UNITED STATES</small><strong>US stocks</strong><small>12 companies · US listings</small></button>
 </div>
+<div class="quote-toolbar"><p id="quote-feed-status" role="status">Connecting to market data…</p><button id="quote-refresh" class="news-action">Refresh prices</button></div>
 <div class="workspace">
 <section class="panel" aria-labelledby="stocks-heading"><div class="panel-head"><h2 id="stocks-heading">Explore stocks</h2><span id="count" class="count" aria-live="polite"></span></div>
 <div class="controls"><label class="search-label"><span aria-hidden="true">⌕</span><span class="sr-only">Search company or ticker</span><input id="search" type="search" placeholder="Search company or ticker…" autocomplete="off"></label><label><span class="sr-only">Sector</span><select id="sector"><option value="all">All sectors</option></select></label></div>
 <div class="sort-row"><span>Select a company to see its details ↗</span><label><span class="sr-only">Sort stocks</span><select id="sort"><option value="name">Name A–Z</option><option value="gainers">Biggest gainers</option><option value="losers">Biggest fallers</option></select></label></div>
-<div class="table-scroll"><table><caption class="sr-only">Sample UK and US stocks with fictional prices and daily percentage changes</caption><thead><tr><th scope="col">Company / ticker</th><th scope="col" class="market-cell">Market</th><th scope="col">Demo price</th><th scope="col">Demo day %</th></tr></thead><tbody id="stock-rows"></tbody></table><div id="empty" class="empty" hidden>No stocks match your filters. Try another name, market or sector.</div></div><div class="table-note">UK prices use GBX (pence): 100 GBX = £1. US prices use US dollars.</div></section>
+<div class="table-scroll"><table><caption class="sr-only">UK and US stocks with latest available regular-session quotes and daily percentage changes</caption><thead><tr><th scope="col">Company / ticker</th><th scope="col" class="market-cell">Market</th><th scope="col">Price</th><th scope="col">Day %</th></tr></thead><tbody id="stock-rows"></tbody></table><div id="empty" class="empty" hidden>No stocks match your filters. Try another name, market or sector.</div></div><div class="table-note">GBX means British pence (100 GBX = £1). Currency is supplied with each quote. Day % compares the latest regular-session price with its previous close.</div></section>
 <aside class="panel detail" id="stock-detail" aria-labelledby="detail-name" tabindex="-1"></aside>
 </div>
 
 <section id="stock-news" class="panel news-section" aria-labelledby="news-heading">
-<div class="news-heading"><div><div class="eyebrow">The story behind the stock</div><h2 id="news-heading">News &amp; the bigger picture</h2><p>Company headlines alongside the economic releases worth watching.</p></div><div class="news-tools"><label><span class="sr-only">Choose a stock for news</span><select id="news-stock"></select></label><button id="news-refresh" class="news-action">Refresh feeds</button></div></div>
+<div class="news-heading"><div><div class="eyebrow">Understand what’s happening</div><h2 id="news-heading">Your stock, summarised.</h2><p>Select any stock for a short company-news briefing and the wider economic context.</p></div><div class="news-tools"><label><span class="sr-only">Choose a stock for its briefing</span><select id="news-stock"></select></label><button id="news-refresh" class="news-action">Refresh briefing</button></div></div>
+<div class="brief-method">Automated summary of headlines and publisher excerpts from the last 7 days. Full articles have not been read; coverage is not exhaustive. No API key required.</div>
+<p id="news-status" class="news-status" role="status"></p>
+<div id="news-setup" class="news-context" hidden><strong>Open the app through its server</strong><p>In your project folder, run <code>node server.mjs</code>, then open <a href="http://localhost:3000">localhost:3000</a>. If the server is already running, a public feed may be temporarily unavailable; try again later.</p></div>
+<div class="news-grid"><div><h3 id="brief-title">Company news in brief</h3><div id="company-brief"></div><details class="source-stories"><summary id="sources-title">Browse source headlines</summary><div id="news-list"></div></details><p><a id="broader-news" target="_blank" rel="noopener noreferrer">Search broader news coverage ↗</a></p></div>
+<div><h3>Macro news that could matter</h3><p class="news-help">US jobs/NFP, Federal Reserve policy and UK rates/inflation. These are reported news stories, not a complete economic calendar.</p><div id="macro-brief"></div></div></div>
 <p id="news-context" class="news-context"></p>
-<div class="news-grid">
-<div><h3>Company news</h3><p class="news-help">Browse available provider history, 20 results at a time. Use Load more for older headlines. A single provider cannot include every article.</p><label class="news-range">News period <select id="news-range"><option value="all">Available history</option><option value="7">Past 7 days</option><option value="30">Past 30 days</option><option value="90">Past 90 days</option></select></label>
-<div id="news-setup" class="news-context" hidden><strong>Connect the news feed</strong><p>In your project folder, add your FMP key to a local <code>.env</code> file as <code>FMP_API_KEY=your_key</code>. Then start the app with:</p><pre>node --env-file=.env server.mjs</pre><p>Open <a href="http://localhost:3000">http://localhost:3000</a>. Your plan must support stock news. Opening the HTML file directly will not load the feed.</p></div>
-<p><a id="broader-news" target="_blank" rel="noopener noreferrer">Search this company on Google News ↗</a></p>
-<p id="news-status" class="news-status" role="status"></p><div id="news-list" class="feed-list"></div><button id="news-more" class="news-action" hidden>Load more headlines</button></div>
-<div><div class="macro-toolbar"><h3>Macro watch · UK + US</h3><label><span class="sr-only">Economic event type</span><select id="macro-filter"><option value="all">All key events</option><option>Jobs / NFP</option><option>Interest rates</option><option>Inflation</option><option>Jobs</option><option>Growth</option></select></label></div>
-<p class="news-help">Past 7 days + next 14 days. NFP, rates, inflation, employment and GDP. Dates are as supplied by the provider; release times are omitted where the timezone is unverified.</p>
-<p id="macro-status" class="news-status" role="status"></p><div id="macro-list" class="feed-list"></div></div>
-</div><p class="sources">Research context is general, not a measured impact or buy/sell signal. Provider data can be delayed, incomplete or revised. Feeds are cached for up to 5 minutes. Quote cards above remain fictional demo data.<br>Primary sources: <a href="https://www.bls.gov/schedule/news_release/empsit.htm" target="_blank" rel="noopener noreferrer">US jobs releases</a><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener noreferrer">Federal Reserve</a><a href="https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes" target="_blank" rel="noopener noreferrer">Bank of England</a></p>
+<p class="sources">Summaries preserve source wording and may omit context. Read the linked articles before drawing conclusions. News may be delayed or revised; feeds are cached for up to 5 minutes. Market quotes and news may arrive at different times; check their timestamps.</p>
 </section>
-<footer class="bottom"><span>finance world · A space for your financial curiosity.</span><span>Interactive demo · No trading or investment recommendations.</span></footer>
+<footer class="bottom"><span>finance world · A space for your financial curiosity.</span><span>Latest available quotes · No trading or investment recommendations.</span></footer>
 <noscript><p>Please enable JavaScript to browse and select stocks.</p></noscript>
 </main>
 <script>
 'use strict';
-// Fictional demonstration values. Replace through a server-side market-data
-// integration before presenting this as live or complete market coverage.
-const stocks = [
-['AAPL','Apple','US','Technology',214.32,1.24],['MSFT','Microsoft','US','Technology',428.76,.83],
-['NVDA','NVIDIA','US','Technology',132.45,2.67],['GOOGL','Alphabet','US','Communication',176.28,-.64],
-['AMZN','Amazon','US','Consumer',192.53,1.12],['META','Meta Platforms','US','Communication',524.18,-1.08],
-['TSLA','Tesla','US','Consumer',248.62,-2.31],['JPM','JPMorgan Chase','US','Financials',221.37,.42],
-['V','Visa','US','Financials',284.19,.75],['JNJ','Johnson & Johnson','US','Healthcare',158.64,-.37],
-['XOM','Exxon Mobil','US','Energy',116.28,.91],['WMT','Walmart','US','Consumer',79.46,1.38],
-['AZN','AstraZeneca','UK','Healthcare',11840,.76],['SHEL','Shell','UK','Energy',2614,1.17],
-['HSBA','HSBC','UK','Financials',712.4,-.58],['ULVR','Unilever','UK','Consumer',4728,.43],
-['BP.','BP','UK','Energy',418.6,-1.24],['GSK','GSK','UK','Healthcare',1528,.28],
-['LLOY','Lloyds Banking Group','UK','Financials',58.72,1.52],['BARC','Barclays','UK','Financials',231.8,-.84],
-['TSCO','Tesco','UK','Consumer',352.4,.65],['VOD','Vodafone','UK','Communication',73.68,-.92],
-['RIO','Rio Tinto','UK','Materials',5096,1.86],['NG.','National Grid','UK','Utilities',1032,-.26]
-].map(([ticker,name,market,sector,price,change])=>({id:market+':'+ticker,ticker,name,market,sector,price,change}));
-let market='all', selectedId='US:AAPL', period='1M';
-const rows=document.getElementById('stock-rows'), detail=document.getElementById('stock-detail');
+const stocks=[["AAPL","Apple","US","Technology"],["MSFT","Microsoft","US","Technology"],["NVDA","NVIDIA","US","Technology"],["GOOGL","Alphabet","US","Communication"],["AMZN","Amazon","US","Consumer"],["META","Meta Platforms","US","Communication"],["TSLA","Tesla","US","Consumer"],["JPM","JPMorgan Chase","US","Financials"],["V","Visa","US","Financials"],["JNJ","Johnson & Johnson","US","Healthcare"],["XOM","Exxon Mobil","US","Energy"],["WMT","Walmart","US","Consumer"],["AZN","AstraZeneca","UK","Healthcare"],["SHEL","Shell","UK","Energy"],["HSBA","HSBC","UK","Financials"],["ULVR","Unilever","UK","Consumer"],["BP.","BP","UK","Energy"],["GSK","GSK","UK","Healthcare"],["LLOY","Lloyds Banking Group","UK","Financials"],["BARC","Barclays","UK","Financials"],["TSCO","Tesco","UK","Consumer"],["VOD","Vodafone","UK","Communication"],["RIO","Rio Tinto","UK","Materials"],["NG.","National Grid","UK","Utilities"]].map(([ticker,name,market,sector])=>({id:market+':'+ticker,ticker,name,market,sector,quote:null,quoteError:null}));
+let market='all',selectedId='US:AAPL',period='1M';
+const rows=document.getElementById('stock-rows'),detail=document.getElementById('stock-detail');
 const search=document.getElementById('search'),sector=document.getElementById('sector'),sort=document.getElementById('sort');
 [...new Set(stocks.map(s=>s.sector))].sort().forEach(name=>{const option=document.createElement('option');option.value=name;option.textContent=name;sector.append(option)});
-const priceText=s=>s.market==='UK'?s.price.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2})+' GBX':new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(s.price);
-const changeText=n=>(n>=0?'+':'')+n.toFixed(2)+'%';
+const priceText=s=>{
+ if(!s.quote)return s.quoteError?'Unavailable':'Loading…';
+ const q=s.quote;
+ return q.currency==='GBX'?q.price.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2})+' GBX':new Intl.NumberFormat('en-GB',{style:'currency',currency:q.currency}).format(q.price);
+};
+const changeText=n=>typeof n==='number'&&Number.isFinite(n)?(n>=0?'+':'')+n.toFixed(2)+'%':'—';
+const quoteStatus=s=>s.quote?
+ 'Quote: '+new Date(s.quote.quoteTime).toLocaleString('en-GB')+' · '+s.quote.session+' · Yahoo Finance':
+ s.quoteError||'Retrieving the latest available quote…';
 function filteredStocks(){
  const query=search.value.trim().toLowerCase();
  return stocks.filter(s=>(market==='all'||s.market===market)&&(sector.value==='all'||s.sector===sector.value)&&(!query||s.name.toLowerCase().includes(query)||s.ticker.toLowerCase().includes(query)))
- .sort((a,b)=>sort.value==='gainers'?b.change-a.change:sort.value==='losers'?a.change-b.change:a.name.localeCompare(b.name));
+ .sort((a,b)=>{
+  if(sort.value==='name')return a.name.localeCompare(b.name);
+  const av=a.quote?.change,bv=b.quote?.change;
+  if(typeof av!=='number')return typeof bv==='number'?1:a.name.localeCompare(b.name);
+  if(typeof bv!=='number')return -1;
+  return sort.value==='gainers'?bv-av:av-bv;
+ });
 }
 function renderRows(){
  const list=filteredStocks();
- // Keep details in sync with the visible list; an empty result clears selection.
  if(!list.some(s=>s.id===selectedId))selectedId=list[0]?.id||null;
  rows.replaceChildren();
  list.forEach(s=>{
-  const tr=document.createElement('tr');tr.dataset.selected=String(s.id===selectedId);
+  const tr=document.createElement('tr');tr.dataset.selected=String(s.id===selectedId);tr.dataset.stock=s.id;
   const company=document.createElement('td'),button=document.createElement('button');
-  button.className='stock-button';button.type='button';button.setAttribute('aria-label','View '+s.name+' ('+s.ticker+')');button.setAttribute('aria-pressed',String(s.id===selectedId));
+  button.className='stock-button';button.type='button';button.dataset.stock=s.id;button.setAttribute('aria-label','View '+s.name+' ('+s.ticker+')');button.setAttribute('aria-pressed',String(s.id===selectedId));
   button.innerHTML='<span class="logo" aria-hidden="true">'+s.ticker.replace('.','').slice(0,2)+'</span><span class="name"><strong>'+s.name+'</strong><small>'+s.ticker+' · '+s.sector+'</small></span>';
   button.addEventListener('click',()=>{selectedId=s.id;renderRows();detail.focus({preventScroll:true});if(window.matchMedia('(max-width:740px)').matches)detail.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth',block:'start'})});
   company.append(button);tr.append(company);
-  const marketCell=document.createElement('td');marketCell.className='market-cell';marketCell.innerHTML='<span class="market-tag">'+s.market+'</span>';tr.append(marketCell);
-  const price=document.createElement('td');price.textContent=priceText(s);tr.append(price);
-  const change=document.createElement('td');change.className='change '+(s.change>=0?'up':'down');change.textContent=changeText(s.change);tr.append(change);rows.append(tr);
+  const cell=document.createElement('td');cell.className='market-cell';cell.innerHTML='<span class="market-tag">'+s.market+'</span>';tr.append(cell);
+  const price=document.createElement('td');price.className='row-price';price.textContent=priceText(s);price.title=quoteStatus(s);tr.append(price);
+  const change=document.createElement('td');change.className='row-change change '+(typeof s.quote?.change==='number'?(s.quote.change>=0?'up':'down'):'');change.textContent=changeText(s.quote?.change);tr.append(change);rows.append(tr);
  });
- document.getElementById('count').textContent=list.length+' of '+stocks.length+' samples';
+ document.getElementById('count').textContent=list.length+' of '+stocks.length+' companies';
  document.getElementById('empty').hidden=list.length!==0;
  renderDetail();
  window.dispatchEvent(new CustomEvent('stock-selected',{detail:stocks.find(s=>s.id===selectedId)||null}));
 }
-function chartValues(stock,windowName){
- // Deterministic synthetic series: never represents historical prices.
- let seed=stock.id.split('').reduce((sum,c)=>sum+c.charCodeAt(0),0)+({'1W':3,'1M':17,'1Y':39}[windowName]);
- let value=100;const values=[];
- for(let i=0;i<28;i++){seed=(seed*9301+49297)%233280;value+=(seed/233280-.46)*5;values.push(value)}
- return values;
-}
-function chartMarkup(stock){
- const values=chartValues(stock,period),min=Math.min(...values)-2,max=Math.max(...values)+2;
- const points=values.map((v,i)=>(i*340/(values.length-1)).toFixed(1)+','+(155-(v-min)/(max-min)*130).toFixed(1)).join(' ');
- return '<svg class="chart" viewBox="0 0 340 180" role="img" aria-label="Fictional '+period+' illustrative trend for '+stock.name+'; not historical price data"><defs><linearGradient id="fill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#bd91c8" stop-opacity=".35"/><stop offset="1" stop-color="#bd91c8" stop-opacity="0"/></linearGradient></defs><path d="M0 35H340M0 90H340M0 145H340" stroke="#eee5ed" fill="none"/><polygon points="0,180 '+points+' 340,180" fill="url(#fill)"/><polyline class="chart-line" points="'+points+'" stroke="#92538c" stroke-width="2.8" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>';
-}
 function renderDetail(){
  const s=stocks.find(s=>s.id===selectedId);
- if(!s){detail.innerHTML='<h2 id="detail-name">Find your next company</h2><p class="about">Adjust your filters, then select a stock to explore its demo details.</p>';return}
- detail.innerHTML='<div class="detail-top"><div class="detail-id"><span class="logo" aria-hidden="true">'+s.ticker.replace('.','').slice(0,2)+'</span><div><h2 id="detail-name">'+s.name+'</h2><small>'+s.ticker+' · '+s.market+' market</small></div></div><span class="demo-tag">Demo stock data</span></div><div class="price">'+priceText(s)+'</div><div class="price-caption"><span class="change '+(s.change>=0?'up':'down')+'">'+changeText(s.change)+'</span> Fictional daily change</div><div class="periods" role="group" aria-label="Illustrative chart period">'+['1W','1M','1Y'].map(p=>'<button type="button" data-period="'+p+'" aria-pressed="'+(p===period)+'">'+p+'</button>').join('')+'</div>'+chartMarkup(s)+'<div class="chart-axis"><span>'+({'1W':'1 week','1M':'1 month','1Y':'1 year'}[period])+' illustration</span><span>End of sample</span></div><div class="chart-note">Synthetic trend · no historical prices or price scale</div><dl class="stats"><div><dt>Market</dt><dd>'+({'UK':'United Kingdom','US':'United States'}[s.market])+'</dd></div><div><dt>Quote currency</dt><dd>'+(s.market==='UK'?'GBX · British pence':'USD · US dollars')+'</dd></div><div><dt>Sector</dt><dd>'+s.sector+'</dd></div><div><dt>Ticker</dt><dd>'+s.ticker+'</dd></div></dl><p class="about"><span class="detail-title">Get to know the stock</span><br>'+s.name+' is included in this '+s.sector.toLowerCase()+' sample. Select another company to compare its demo quote and explore a different sector.</p><div class="selection-hint">You’re exploring, not trading. This prototype does not place orders.</div><a class="stock-news-link" href="#stock-news">Read news about '+s.name+' ↗</a>';
- detail.querySelectorAll('[data-period]').forEach(button=>button.addEventListener('click',()=>{period=button.dataset.period;renderDetail();detail.querySelector('[data-period="'+period+'"]').focus({preventScroll:true})}));
+ if(!s){detail.innerHTML='<h2 id="detail-name">Find your next company</h2><p class="about">Adjust your filters, then select a stock to explore its price and news.</p>';return}
+ detail.innerHTML='<div class="detail-top"><div class="detail-id"><span class="logo" aria-hidden="true">'+s.ticker.replace('.','').slice(0,2)+'</span><div><h2 id="detail-name">'+s.name+'</h2><small>'+s.ticker+' · '+s.market+' market</small></div></div><span class="demo-tag">Market quote</span></div><div class="price quote-price"></div><div class="price-caption"><span class="change quote-change"></span> vs previous regular-session close</div><p class="quote-time"></p><div class="periods" role="group" aria-label="Price chart period">'+['1W','1M','1Y'].map(p=>'<button type="button" data-period="'+p+'" aria-pressed="'+(p===period)+'">'+p+'</button>').join('')+'</div><div id="price-chart" class="chart-placeholder">Loading historical prices…</div><div class="chart-note">Historical closing prices from Yahoo Finance. Provider/exchange delays may apply.</div><dl class="stats"><div><dt>Market</dt><dd>'+({'UK':'United Kingdom','US':'United States'}[s.market])+'</dd></div><div><dt>Quote currency</dt><dd class="quote-currency"></dd></div><div><dt>Sector</dt><dd>'+s.sector+'</dd></div><div><dt>Ticker</dt><dd>'+s.ticker+'</dd></div></dl><p class="about"><span class="detail-title">Get to know the stock</span><br>'+s.name+' is part of this '+s.sector.toLowerCase()+' collection. Explore its price history and recent news.</p><a class="stock-news-link" href="#stock-news">Read '+s.name+' news summary ↗</a>';
+ paintQuote(s);
+ detail.querySelectorAll('[data-period]').forEach(button=>button.addEventListener('click',()=>{
+  period=button.dataset.period;
+  detail.querySelectorAll('[data-period]').forEach(item=>item.setAttribute('aria-pressed',String(item.dataset.period===period)));
+  window.dispatchEvent(new CustomEvent('chart-requested',{detail:{stock:s,period}}));
+ }));
+ window.dispatchEvent(new CustomEvent('chart-requested',{detail:{stock:s,period}}));
+}
+function paintQuote(s){
+ const row=[...rows.querySelectorAll('tr')].find(el=>el.dataset.stock===s.id);
+ if(row){
+  row.querySelector('.row-price').textContent=priceText(s);row.querySelector('.row-price').title=quoteStatus(s);
+  const change=row.querySelector('.row-change');change.textContent=changeText(s.quote?.change);change.className='row-change change '+(typeof s.quote?.change==='number'?(s.quote.change>=0?'up':'down'):'');
+ }
+ if(s.id!==selectedId)return;
+ const price=detail.querySelector('.quote-price');if(!price)return;
+ price.textContent=priceText(s);
+ const change=detail.querySelector('.quote-change');change.textContent=changeText(s.quote?.change);change.className='change quote-change '+(typeof s.quote?.change==='number'?(s.quote.change>=0?'up':'down'):'');
+ detail.querySelector('.quote-time').textContent=quoteStatus(s);
+ detail.querySelector('.quote-currency').textContent=s.quote?(s.quote.currency==='GBX'?'GBX · British pence':s.quote.currency):'—';
 }
 document.querySelectorAll('[data-market]').forEach(button=>button.addEventListener('click',()=>{
- market=button.dataset.market;
- document.querySelectorAll('[data-market]').forEach(item=>item.setAttribute('aria-pressed',String(item.dataset.market===market)));
- renderRows();
+ market=button.dataset.market;document.querySelectorAll('[data-market]').forEach(item=>item.setAttribute('aria-pressed',String(item.dataset.market===market)));renderRows();
 }));
 search.addEventListener('input',renderRows);sector.addEventListener('change',renderRows);sort.addEventListener('change',renderRows);
 renderRows();
 </script>
+<script src="quotes.js"></script>
 <script src="news.js"></script>
 </body>
 </html>
+
