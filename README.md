@@ -71,3 +71,6 @@ Get Finnhub WebSocket details at https://finnhub.io/docs/api/websocket-trades. O
 
 ## Candlestick charts
 The stock detail panel offers `1m`, `5m`, `15m`, `1h`, `4h`, `1d`, `1W`, `1M` and `1Y`. The first six are candle resolutions / short history windows (1m = one-minute candles for one trading day, 5m/15m = recent five days, 1h/4h = recent month, 1d = five days). The last three display a week, month or year of daily candles. Each candle shows provider open/high/low/close (OHLC); 4h candles aggregate four hourly candles within a single market-local date. Candles are historical provider data, **not a guaranteed live tick feed**. Intraday data retention, UK exchange coverage, holidays, trading sessions and exchange delays depend on the provider. Unsupported intervals display a clear no-data/error state rather than synthetic prices.
+
+## Animated money-flow explainer
+The top-of-page UK/US animation is an **illustration**, not measured capital flow. The selector explains potential household pathways through interest rates, inflation, wages and trade/political policy. Related FMP economic calendar items are shown when available without implying an observed causal or monetary impact. The explainer remains educational when FMP is unavailable. No user budget or financial account data is collected.
