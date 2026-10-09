@@ -11,7 +11,9 @@ export function createLiveStream({apiKey=process.env.FINNHUB_API_KEY,WebSocketIm
  function status(){return {type:'status',mode:!apiKey?'unconfigured':connected?'streaming':'fallback',connected,lastReceived:lastReceived?new Date(lastReceived).toISOString():null,detail:!apiKey?'Set FINNHUB_API_KEY to enable streaming.':'Streaming trades require provider entitlement; some symbols may not be supported.'}}
  function start(){
   if(stopped||socket||retry||!apiKey||!WebSocketImpl||!clients.size)return;
-  const ws=new WebSocketImpl('wss://ws.finnhub.io?token='+encodeURIComponent(apiKey));
+  let ws;
+  try{ws=new WebSocketImpl('wss://ws.finnhub.io?token='+encodeURIComponent(apiKey))}
+  catch{broadcast({type:'status',mode:'fallback',connected:false,detail:'Upstream streaming could not connect.'});return}
   socket=ws;
   function reconnect(){
    if(socket!==ws)return;
