@@ -133,22 +133,22 @@ td{padding-top:17px;padding-bottom:17px;border-top-color:#eee7e4}tr[data-selecte
  </div>
  </section>
 
-<section class="intro"><div><div class="eyebrow">9–5 Wealth · Investing, with confidence</div><h1>Your salary is the beginning.<br><em>Not the limit.</em></h1><p>Explore UK and US companies, understand the forces shaping markets, and make space for confident, informed financial decisions.</p></div><div class="demo"><strong>LATEST AVAILABLE QUOTES</strong>24 UK/US companies. Prices refresh every minute. Check each quote’s timestamp; market data may be delayed.</div></section>
-<div class="market-cards" role="group" aria-label="Filter by market">
-<button class="market-card" data-market="all" aria-pressed="true"><span class="symbol" aria-hidden="true">◎</span><small>EXPLORE TOGETHER</small><strong>UK + US</strong><small>24 companies</small></button>
-<button class="market-card" data-market="UK" aria-pressed="false"><span class="symbol" aria-hidden="true">£</span><small>UNITED KINGDOM</small><strong>UK stocks</strong><small>12 companies · UK listings</small></button>
-<button class="market-card" data-market="US" aria-pressed="false"><span class="symbol" aria-hidden="true">$</span><small>UNITED STATES</small><strong>US stocks</strong><small>12 companies · US listings</small></button>
+<section class="intro"><div><div class="eyebrow">9–5 Wealth · Investing, with confidence</div><h1>Your salary is the beginning.<br><em>Not the limit.</em></h1><p>Track gold, silver and the Nasdaq-100 with historical candlestick charts, and understand the forces shaping markets.</p></div><div class="demo"><strong>LATEST AVAILABLE QUOTES</strong>Gold and silver futures plus Nasdaq-100 index. Quotes refresh every minute. Check each quote’s timestamp; market data may be delayed.</div></section>
+<div class="market-cards" role="group" aria-label="Choose a market">
+<button class="market-card" data-market="all" aria-pressed="true"><span class="symbol" aria-hidden="true">◎</span><small>ALL MARKETS</small><strong>All three</strong><small>Gold · Silver · Nasdaq-100</small></button>
+<button class="market-card" data-market="metal" aria-pressed="false"><span class="symbol" aria-hidden="true">◇</span><small>PRECIOUS METALS</small><strong>Gold &amp; silver</strong><small>USD per troy ounce · futures</small></button>
+<button class="market-card" data-market="index" aria-pressed="false"><span class="symbol" aria-hidden="true">↗</span><small>US MARKET</small><strong>Nasdaq-100</strong><small>Index points · not a share</small></button>
 </div>
 <div class="quote-toolbar"><p id="quote-feed-status" role="status">Connecting to market data…</p><button id="quote-refresh" class="news-action">Refresh prices</button></div>
 <div class="workspace">
-<section class="panel" aria-labelledby="stocks-heading"><div class="panel-head"><h2 id="stocks-heading">Explore stocks</h2><span id="count" class="count" aria-live="polite"></span></div>
-<div class="controls"><label class="search-label"><span aria-hidden="true">⌕</span><span class="sr-only">Search company or ticker</span><input id="search" type="search" placeholder="Search company or ticker…" autocomplete="off"></label><label><span class="sr-only">Sector</span><select id="sector"><option value="all">All sectors</option></select></label></div>
-<div class="sort-row"><span>Select a company to see its details ↗</span><label><span class="sr-only">Sort stocks</span><select id="sort"><option value="name">Name A–Z</option><option value="gainers">Biggest gainers</option><option value="losers">Biggest fallers</option></select></label></div>
-<div class="table-scroll"><table><caption class="sr-only">UK and US stocks with latest available regular-session quotes and daily percentage changes</caption><thead><tr><th scope="col">Company / ticker</th><th scope="col" class="market-cell">Market</th><th scope="col">Price</th><th scope="col">Day %</th></tr></thead><tbody id="stock-rows"></tbody></table><div id="empty" class="empty" hidden>No stocks match your filters. Try another name, market or sector.</div></div><div class="table-note">GBX means British pence (100 GBX = £1). Currency is supplied with each quote. Day % compares the latest regular-session price with its previous close.</div></section>
+<section class="panel" aria-labelledby="stocks-heading"><div class="panel-head"><h2 id="stocks-heading">Explore markets</h2><span id="count" class="count" aria-live="polite"></span></div>
+<div class="controls"><label class="search-label"><span aria-hidden="true">⌕</span><span class="sr-only">Search market or ticker</span><input id="search" type="search" placeholder="Search gold, silver or Nasdaq…" autocomplete="off"></label><label><span class="sr-only">Sector</span><select id="sector"><option value="all">All sectors</option></select></label></div>
+<div class="sort-row"><span>Select a market to see its details ↗</span><label><span class="sr-only">Sort stocks</span><select id="sort"><option value="name">Name A–Z</option><option value="gainers">Biggest gainers</option><option value="losers">Biggest fallers</option></select></label></div>
+<div class="table-scroll"><table><caption class="sr-only">Gold and silver futures and Nasdaq-100 index quotes with daily percentage changes</caption><thead><tr><th scope="col">Market / symbol</th><th scope="col" class="market-cell">Market</th><th scope="col">Price</th><th scope="col">Day %</th></tr></thead><tbody id="stock-rows"></tbody></table><div id="empty" class="empty" hidden>No stocks match your filters. Try another name, market or sector.</div></div><div class="table-note">GBX means British pence (100 GBX = £1). Currency is supplied with each quote. Day % compares the latest regular-session price with its previous close.</div></section>
 <aside class="panel detail" id="stock-detail" aria-labelledby="detail-name" tabindex="-1"></aside>
 </div>
 
-<section id="stock-news" class="panel news-section" aria-labelledby="news-heading">
+<section id="stock-news" class="panel news-section" hidden aria-labelledby="news-heading">
 <div class="news-heading"><div><div class="eyebrow">Understand what’s happening</div><h2 id="news-heading">Your stock, summarised.</h2><p>Select any stock for a short company-news briefing and the wider economic context.</p></div><div class="news-tools"><label><span class="sr-only">Choose a stock for its briefing</span><select id="news-stock"></select></label><button id="news-refresh" class="news-action">Refresh briefing</button></div></div>
 <div class="brief-method">Automated summary of headlines and publisher excerpts from the last 7 days. Full articles have not been read; coverage is not exhaustive. No API key required.</div>
 <p id="news-status" class="news-status" role="status"></p>
@@ -163,8 +163,8 @@ td{padding-top:17px;padding-bottom:17px;border-top-color:#eee7e4}tr[data-selecte
 </main>
 <script>
 'use strict';
-const stocks=[["AAPL","Apple","US","Technology"],["MSFT","Microsoft","US","Technology"],["NVDA","NVIDIA","US","Technology"],["GOOGL","Alphabet","US","Communication"],["AMZN","Amazon","US","Consumer"],["META","Meta Platforms","US","Communication"],["TSLA","Tesla","US","Consumer"],["JPM","JPMorgan Chase","US","Financials"],["V","Visa","US","Financials"],["JNJ","Johnson & Johnson","US","Healthcare"],["XOM","Exxon Mobil","US","Energy"],["WMT","Walmart","US","Consumer"],["AZN","AstraZeneca","UK","Healthcare"],["SHEL","Shell","UK","Energy"],["HSBA","HSBC","UK","Financials"],["ULVR","Unilever","UK","Consumer"],["BP.","BP","UK","Energy"],["GSK","GSK","UK","Healthcare"],["LLOY","Lloyds Banking Group","UK","Financials"],["BARC","Barclays","UK","Financials"],["TSCO","Tesco","UK","Consumer"],["VOD","Vodafone","UK","Communication"],["RIO","Rio Tinto","UK","Materials"],["NG.","National Grid","UK","Utilities"]].map(([ticker,name,market,sector])=>({id:market+':'+ticker,ticker,name,market,sector,quote:null,quoteError:null}));
-let market='all',selectedId='US:AAPL',period='1M';
+const stocks=[["GOLD","Gold futures","MARKET","Precious metals"],["SILVER","Silver futures","MARKET","Precious metals"],["NASDAQ","Nasdaq-100 Index","MARKET","Equity index"]].map(([ticker,name,market,sector])=>({id:market+':'+ticker,ticker,name,market,sector,quote:null,quoteError:null}));
+let market='all',selectedId='MARKET:GOLD',period='1M';
 const rows=document.getElementById('stock-rows'),detail=document.getElementById('stock-detail');
 const search=document.getElementById('search'),sector=document.getElementById('sector'),sort=document.getElementById('sort');
 [...new Set(stocks.map(s=>s.sector))].sort().forEach(name=>{const option=document.createElement('option');option.value=name;option.textContent=name;sector.append(option)});
@@ -179,7 +179,7 @@ const quoteStatus=s=>s.quote?
  s.quoteError||'Retrieving the latest available quote…';
 function filteredStocks(){
  const query=search.value.trim().toLowerCase();
- return stocks.filter(s=>(market==='all'||s.market===market)&&(sector.value==='all'||s.sector===sector.value)&&(!query||s.name.toLowerCase().includes(query)||s.ticker.toLowerCase().includes(query)))
+ return stocks.filter(s=>(market==='all'||(market==='metal'&&s.sector==='Precious metals')||(market==='index'&&s.sector==='Equity index'))&&(sector.value==='all'||s.sector===sector.value)&&(!query||s.name.toLowerCase().includes(query)||s.ticker.toLowerCase().includes(query)))
  .sort((a,b)=>{
   if(sort.value==='name')return a.name.localeCompare(b.name);
   const av=a.quote?.change,bv=b.quote?.change;
@@ -240,7 +240,7 @@ search.addEventListener('input',renderRows);sector.addEventListener('change',ren
 renderRows();
 </script>
 <script src="quotes.js"></script>
-<script src="news.js"></script>
+
 <script src="money-flow.js"></script>
 </body>
 </html>
